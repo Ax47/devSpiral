@@ -1,0 +1,54 @@
+app-title:
+python2
+
+app-version:
+$Revision: 1.48 $
+
+cwd:
+/home/jalil/Documents/programmation/python/objedit/examples
+
+date:
+Mon Sep 21 13:04:03 2015
+
+e-type:
+<type 'exceptions.AttributeError'>
+
+e-value:
+'objdictedit' object has no attribute 'Suffixe'
+
+locals:
+    self: <__main__.objdictedit; proxy of <Swig Object of type 'wxFrame *' at 0x138e090> >
+    event: <wx._core.CommandEvent; proxy of <Swig Object of type 'wxCommandEvent *' at 0x7ffcab709210> >
+
+platform:
+Linux-3.13.0-61-generic-x86_64-with-Ubuntu-14.04-trusty
+
+python-version:
+2.7.6
+
+self:
+    EditMenu: <wx._core.Menu; proxy of <Swig Object of type 'wxMenu *' at 0x13d45f0> >
+    AddMenu: <wx._core.Menu; proxy of <Swig Object of type 'wxMenu *' at 0x13d49e0> >
+    BusId: None
+    this: <Swig Object of type 'wxFrame *' at 0x138e090>
+    Frame: <__main__.objdictedit; proxy of <Swig Object of type 'wxFrame *' at 0x138e090> >
+    FileMenu: <wx._core.Menu; proxy of <Swig Object of type 'wxMenu *' at 0x13cfa10> >
+    HtmlFrameOpened: []
+    Manager: <nodemanager.NodeManager instance at 0x7f715eb2a4d0>
+    HelpBar: <wx._windows.StatusBar; proxy of <Swig Object of type 'wxStatusBar *' at 0x140e400> >
+    HelpMenu: <wx._core.Menu; proxy of <Swig Object of type 'wxMenu *' at 0x13d4dd0> >
+    FileOpened: <wx._controls.Notebook; proxy of <Swig Object of type 'wxNotebook *' at 0x140ea20> >
+    ModeSolo: True
+    Closing: False
+
+traceback:
+  File "/home/jalil/Documents/programmation/python/objedit/nodeeditortemplate.py", line 181, in OnNodeInfosMenu
+    print self.Suffixe
+<type 'exceptions.AttributeError'>: 'objdictedit' object has no attribute 'Suffixe'
+
+wx-platform:
+__WXGTK__
+
+wx-version:
+2.8.12.1
+

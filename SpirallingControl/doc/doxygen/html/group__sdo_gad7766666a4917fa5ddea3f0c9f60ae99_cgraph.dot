@@ -1,0 +1,22 @@
+digraph "writeNetworkDictCallBackAI"
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="writeNetworkDictCallBackAI",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 [label="_writeNetworkDict",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sdo_8c.html#a77f638cbd9aca7bb67056e0cda945651"];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node3 [label="GetSDOClientFromNodeId",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sdo_8c.html#a83b35f348d36c23421eb1753df96fc33"];
+  Node2 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node4 [label="getSDOfreeLine",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sdo_8c.html#a58d1f9691977617601beb9e5b4123252",tooltip="Search for an unused line in the transfers array to store a new SDO. ie a line which value of the fie..."];
+  Node2 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node5 [label="getSDOlineOnUse",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sdo_8c.html#a3a6660620ea5fb37d311afc3d9a301c2",tooltip="Search for the line, in the transfers array, which contains the beginning of the reception of a fragm..."];
+  Node2 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node6 [label="initSDOline",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sdo_8c.html#aa570e2c8e69527298b428563a38ced9f",tooltip="Initialize some fields of the structure. "];
+  Node2 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node7 [label="resetSDOline",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sdo_8c.html#a42d33be015d4c4c83c73f1f0e588f481",tooltip="Reset an unused line. "];
+  Node7 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node8 [label="sendSDO",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sdo_8c.html#a2f61d90737fb951b4b33c05e9b9810d7",tooltip="Transmit a SDO frame on the bus bus_id. "];
+}

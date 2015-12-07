@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="SpirallingControl" />
+		<Option makefile_is_custom="1" />
+		<Option execution_dir="../SpirallingControl" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Option extended_obj_names="1" />
+		<Build>
+			<Target title="Debug">
+				<Option output="../apmoteur/SpirallingControl" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<MakeCommands>
+					<Build command="$make -f $makefile" />
+					<CompileFile command="$make -f $makefile $file" />
+					<Clean command="$make mrproper" />
+					<DistClean command="$make -f $makefile distclean$target" />
+					<AskRebuildNeeded command="$make -q -f $makefile $target" />
+					<SilentBuild command="$make -f $makefile &gt; $(CMD_NULL)" />
+				</MakeCommands>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/apmoteur" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+				<MakeCommands>
+					<Build command="make" />
+					<CompileFile command="" />
+					<Clean command="make clean" />
+					<DistClean command="$make -f $makefile distclean$target" />
+					<AskRebuildNeeded command="make" />
+					<SilentBuild command="make &gt; $(CMD_NULL)" />
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add directory="../../include" />
+			<Add directory="../../include/timers_unix" />
+			<Add directory="../../include/unix" />
+			<Add directory="../../drivers/can_virtual" />
+		</Compiler>
+		<Linker>
+			<Add library="../../drivers/can_virtual/libcanfestival_can_virtual.so" />
+			<Add library="../../src/libcanfestival.a" />
+			<Add directory="../../src" />
+			<Add directory="../../drivers/can_virtual" />
+		</Linker>
+		<Unit filename="Makefile" />
+		<Unit filename="SpirallingControl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="SpirallingControl.h" />
+		<Unit filename="SpirallingMaster.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="SpirallingMaster.h" />
+		<Unit filename="cantools.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cantools.h" />
+		<Unit filename="errgen.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="errgen.h" />
+		<Unit filename="getopt.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="getopt.h" />
+		<Unit filename="gtksig.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="gtksig.h" />
+		<Unit filename="gui.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="gui.h" />
+		<Unit filename="keyword.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="keyword.h" />
+		<Unit filename="laser/errgen_laser.h" />
+		<Unit filename="laser/laser.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="laser/laser.h" />
+		<Unit filename="laser/laser_asserv.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="laser/laser_asserv.h" />
+		<Unit filename="laser/struct_laser.h" />
+		<Unit filename="lsstools.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lsstools.h" />
+		<Unit filename="master.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="master.h" />
+		<Unit filename="moteurs.h" />
+		<Unit filename="motor.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="motor.h" />
+		<Unit filename="od_callback.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="od_callback.h" />
+		<Unit filename="slave.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="slave.h" />
+		<Unit filename="strtools.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strtools.h" />
+		<Unit filename="stylesheet.css" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

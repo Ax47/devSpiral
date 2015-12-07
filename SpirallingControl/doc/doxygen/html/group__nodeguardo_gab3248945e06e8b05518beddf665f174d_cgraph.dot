@@ -1,0 +1,17 @@
+digraph "proceedNODE_GUARD"
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="proceedNODE_GUARD",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 [label="ConsumerHeartbeatAlarm",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__heartbeato.html#gac1fe275595c601d9dfed7cb9f5e3373e"];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node3 [label="DelAlarm",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__timer.html#ga991b3cfaac2f201b14d5530f75985c21",tooltip="Delete an alarm before expiring. "];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node4 [label="SetAlarm",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__timer.html#ga11c2616d78f06ed9144ef662f757b128",tooltip="Set an alarm to execute a callback function when expired. "];
+  Node4 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node5 [label="getElapsedTime",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__timer.html#ga4dccc204d52176bd547ab34d6858f5ba",tooltip="Get the time elapsed since latest timer occurence. "];
+  Node4 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node6 [label="setTimer",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__timer.html#gab8d05dee70f04b5c5190ab00e84da106",tooltip="Set a timerfor a given time. "];
+}

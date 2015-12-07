@@ -1,0 +1,15 @@
+digraph "struct_CO_Data"
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  Node1 [label="struct_CO_Data",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node2 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" PDO_status" ,fontname="FreeSans"];
+  Node2 [label="struct_s_PDO_status",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structstruct__s__PDO__status.html"];
+  Node3 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" last_message" ,fontname="FreeSans"];
+  Node3 [label="Message",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structMessage.html",tooltip="The CAN message structure. "];
+  Node4 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" dcf_odentry\nscanIndexOD\nobjdict" ,fontname="FreeSans"];
+  Node4 [label="td_indextable",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structtd__indextable.html"];
+  Node5 -> Node4 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" pSubindex" ,fontname="FreeSans"];
+  Node5 [label="td_subindex",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structtd__subindex.html"];
+  Node1 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" post_sync\noperational\nnodeguardError\npost_SlaveStateChange\npreOperational\nstoreODSubIndex\npost_emcy\npost_SlaveBootup\npost_TPDO\nheartbeatError\n..." ,fontname="FreeSans"];
+}

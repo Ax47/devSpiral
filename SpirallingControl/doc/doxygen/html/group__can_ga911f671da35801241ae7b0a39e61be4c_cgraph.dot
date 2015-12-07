@@ -1,0 +1,13 @@
+digraph "LoadCanDriver"
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="LoadCanDriver",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 [label="canChangeBaudRate",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__can.html#ga094b5a8598164b3a7f1dd45622b9d491",tooltip="Change the CANOpen device baudrate. "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node3 [label="canClose",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__can.html#ga02957f72a9b951603adb98a142bd447b",tooltip="Close a CANOpen device. "];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node4 [label="canOpen",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__can.html#ga7476146ad15948a22e7f80a00c89c40a",tooltip="Open a CANOpen device. "];
+}

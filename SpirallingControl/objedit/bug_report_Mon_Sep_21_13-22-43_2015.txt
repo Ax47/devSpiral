@@ -1,0 +1,52 @@
+app-title:
+python2
+
+app-version:
+$Revision: 1.48 $
+
+cwd:
+/home/jalil/Documents/programmation/python/objedit/examples
+
+date:
+Mon Sep 21 13:22:43 2015
+
+e-type:
+<type 'exceptions.AttributeError'>
+
+e-value:
+Node instance has no attribute 'Suffixe'
+
+locals:
+    self: <nodemanager.NodeManager instance at 0x7f15068df6c8>
+    type: u'slave'
+    description: ''
+    name: u'TestSlave'
+    id: 0
+
+platform:
+Linux-3.13.0-61-generic-x86_64-with-Ubuntu-14.04-trusty
+
+python-version:
+2.7.6
+
+self:
+    UndoBuffers: {1: <nodemanager.UndoBuffer instance at 0x7f14f43216c8>}
+    NodeIndex: 1
+    CurrentNode: <node.Node instance at 0x7f14f4321ab8>
+    FileNames: {1: u'TestSlave'}
+    FilePaths: {1: u'/home/jalil/Documents/programmation/python/objedit/examples/TestSlave.od'}
+    LastNewIndex: 0
+
+traceback:
+  File "/home/jalil/Documents/programmation/python/objedit/nodeeditortemplate.py", line 182, in OnNodeInfosMenu
+    name, id, type, description, suffixe = self.Manager.GetCurrentNodeInfos()
+  File "/home/jalil/Documents/programmation/python/objedit/nodemanager.py", line 950, in GetCurrentNodeInfos
+    suffixe = self.CurrentNode.Suffixe
+<type 'exceptions.AttributeError'>: Node instance has no attribute 'Suffixe'
+
+wx-platform:
+__WXGTK__
+
+wx-version:
+2.8.12.1
+

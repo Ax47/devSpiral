@@ -1,0 +1,46 @@
+app-title:
+python2
+
+app-version:
+$Revision: 1.48 $
+
+cwd:
+/home/jalil/Documents/programmation/python/objedit
+
+date:
+Mon Sep 21 13:01:42 2015
+
+e-type:
+<type 'exceptions.TypeError'>
+
+e-value:
+__init__() takes exactly 4 arguments (5 given)
+
+locals:
+    filesOpen: []
+    manager: None
+    self: <__main__.objdictedit;  >
+    parent: None
+
+platform:
+Linux-3.13.0-61-generic-x86_64-with-Ubuntu-14.04-trusty
+
+python-version:
+2.7.6
+
+self:
+
+
+traceback:
+  File "/home/jalil/Documents/programmation/python/objedit/objdictedit.py", line 853, in <module>
+    frame = objdictedit(None, filesOpen = args)
+  File "/home/jalil/Documents/programmation/python/objedit/objdictedit.py", line 342, in __init__
+    NodeEditorTemplate.__init__(self, NodeManager(), self, True)
+<type 'exceptions.TypeError'>: __init__() takes exactly 4 arguments (5 given)
+
+wx-platform:
+__WXGTK__
+
+wx-version:
+2.8.12.1
+

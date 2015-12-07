@@ -1,0 +1,19 @@
+digraph "User API"
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir=LR;
+  Node5 [label="State Machine",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__statemachine.html"];
+  Node1 [label="CAN management",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__can.html"];
+  Node0 [label="User API",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node3 [label="Object Dictionary Management",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__od.html",tooltip="The Object Dictionary is the heart of each CANopen device containing all communication and applicatio..."];
+  Node2 [label="Network Management",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__networkmanagement.html"];
+  Node6 [label="Timer Management",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__timer.html"];
+  Node4 [label="Communication Objects",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__comobj.html"];
+  Node0->Node1 [shape=plaintext, color="midnightblue", dir="back", style="solid"];
+  Node0->Node2 [shape=plaintext, color="midnightblue", dir="back", style="solid"];
+  Node0->Node3 [shape=plaintext, color="midnightblue", dir="back", style="solid"];
+  Node0->Node4 [shape=plaintext, color="midnightblue", dir="back", style="solid"];
+  Node0->Node5 [shape=plaintext, color="midnightblue", dir="back", style="solid"];
+  Node0->Node6 [shape=plaintext, color="midnightblue", dir="back", style="solid"];
+}

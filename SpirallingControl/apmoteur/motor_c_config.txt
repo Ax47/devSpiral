@@ -1,0 +1,3 @@
+Torque 40
+Torque_Slope 100
+/** Fichier de configuration du moteur couple **/

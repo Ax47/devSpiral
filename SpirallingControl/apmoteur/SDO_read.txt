@@ -1,0 +1,9 @@
+Index   Subindex    Type    Commentaires
+0x1000	0	7	Device type
+0x1008	0	9	Manufacturer Name
+0x1009	0	9	Manufacturer Hardware version
+0x100A	0	9	Manufacturer software version
+0x1018	1	7	Vendor ID
+0x1018	2	7	Product Code
+0x1018	3	7	Revision number
+0x1018	4	7	Serial number

@@ -1,0 +1,186 @@
+# depslib dependency file v1.0
+1442476572 source:/home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/examples/apmoteur/getopt.c
+	<config.h>
+	<stdio.h>
+	<gnu-versions.h>
+	<stdlib.h>
+	<unistd.h>
+	<unixlib.h>
+	<string.h>
+	<libintl.h>
+	<wchar.h>
+	"getopt.h"
+	<string.h>
+	<string.h>
+	<strings.h>
+
+1442476429 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/include/config.h
+
+1442476577 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/examples/apmoteur/getopt.h
+	<ctype.h>
+
+1442476932 source:/home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/examples/apmoteur/main.c
+	<windows.h>
+	"getopt.h"
+	<stdio.h>
+	<string.h>
+	<unistd.h>
+	<stdlib.h>
+	<signal.h>
+	"canfestival.h"
+	"Master.h"
+	"Slave.h"
+	"main.h"
+
+1442476429 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/include/unix/canfestival.h
+	"timerscfg.h"
+	"can_driver.h"
+	"data.h"
+	"timers_driver.h"
+	<dlfcn.h>
+
+1442476429 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/include/timers_unix/timerscfg.h
+	<pthread.h>
+
+1442476429 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/include/can_driver.h
+	"applicfg.h"
+	"can.h"
+	"def.h"
+
+1442476429 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/include/unix/applicfg.h
+	<string.h>
+	<stdio.h>
+	<sys/types.h>
+	<linux/types.h>
+	<stdio.h>
+
+1442476429 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/include/can.h
+	"applicfg.h"
+
+1442476429 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/include/def.h
+	<config.h>
+
+1442476429 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/include/data.h
+	"applicfg.h"
+	"def.h"
+	"can.h"
+	"objdictdef.h"
+	"objacces.h"
+	"sdo.h"
+	"pdo.h"
+	"states.h"
+	"lifegrd.h"
+	"sync.h"
+	"nmtSlave.h"
+	"nmtMaster.h"
+	"emcy.h"
+	"lss.h"
+
+1442476429 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/include/objdictdef.h
+
+1442476429 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/include/objacces.h
+	<applicfg.h>
+
+1442476429 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/include/sdo.h
+	"timer.h"
+	"data.h"
+
+1442476429 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/include/timer.h
+	<timerscfg.h>
+	<applicfg.h>
+	"data.h"
+
+1442476429 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/include/pdo.h
+	<applicfg.h>
+	<def.h>
+	"can.h"
+	"data.h"
+
+1442476429 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/include/states.h
+	<applicfg.h>
+	"data.h"
+
+1442476429 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/include/lifegrd.h
+	<applicfg.h>
+	"data.h"
+
+1442476429 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/include/sync.h
+
+1442476429 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/include/nmtSlave.h
+	<applicfg.h>
+	"data.h"
+
+1442476429 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/include/nmtMaster.h
+	"data.h"
+
+1442476429 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/include/emcy.h
+	<applicfg.h>
+	"data.h"
+
+1442476429 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/include/lss.h
+
+1442476429 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/include/timers_driver.h
+	"timerscfg.h"
+	"timer.h"
+
+1442476577 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/examples/apmoteur/Master.h
+	"TestMaster.h"
+
+1442476577 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/examples/apmoteur/TestMaster.h
+	"data.h"
+
+1442476577 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/examples/apmoteur/Slave.h
+	"TestSlave.h"
+	"TestSlave2.h"
+	"moteur_translation_1.h"
+
+1442476577 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/examples/apmoteur/TestSlave.h
+	"data.h"
+
+1442476577 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/examples/apmoteur/TestSlave2.h
+	"data.h"
+
+1442476577 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/examples/apmoteur/moteur_translation_1.h
+	"data.h"
+
+1442476825 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/examples/apmoteur/main.h
+	"canfestival.h"
+
+1442476949 source:/home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/examples/apmoteur/Master.c
+	"Master.h"
+	"Slave.h"
+	"main.h"
+
+1442476572 source:/home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/examples/apmoteur/moteur_translation_1.c
+	"moteur_translation_1.h"
+
+1442476957 source:/home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/examples/apmoteur/Slave.c
+	"Slave.h"
+	"Master.h"
+	"main.h"
+
+1442476572 source:/home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/examples/apmoteur/TestMaster.c
+	"TestMaster.h"
+
+1442476979 source:/home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/examples/apmoteur/TestMasterSlave.c
+	<windows.h>
+	"getopt.h"
+	<stdio.h>
+	<string.h>
+	<unistd.h>
+	<stdlib.h>
+	<signal.h>
+	"canfestival.h"
+	"Master.h"
+	"Slave.h"
+	"TestMasterSlave.h"
+
+1442476577 /home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/examples/apmoteur/TestMasterSlave.h
+	"canfestival.h"
+
+1442476572 source:/home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/examples/apmoteur/TestSlave.c
+	"TestSlave.h"
+
+1442476572 source:/home/jalil/Documents/programmation/canfestival/v9/CanFestival-3-8bfe0ac00cdb/examples/apmoteur/TestSlave2.c
+	"TestSlave2.h"
+

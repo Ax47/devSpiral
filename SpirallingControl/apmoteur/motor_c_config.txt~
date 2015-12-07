@@ -1,0 +1,4 @@
+Torque 50
+Torque_Slope 100
+Torque_Max_Velocity 120000
+/** Fichier de configuration du moteur couple **/

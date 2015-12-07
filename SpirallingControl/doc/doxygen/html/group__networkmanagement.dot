@@ -1,0 +1,13 @@
+digraph "Network Management"
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir=LR;
+  Node2 [label="NMT Master",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__nmtmaster.html",tooltip="NMT master provides mechanisms that control and monitor the state of nodes and their behavior in the ..."];
+  Node3 [label="NMT Slave",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__nmtslave.html",tooltip="The NMT Slave methods are called automatically when a NMT message from Master are received..."];
+  Node1 [label="User API",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__userapi.html"];
+  Node0 [label="Network Management",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1->Node0 [shape=plaintext, color="midnightblue", dir="back", style="solid"];
+  Node0->Node2 [shape=plaintext, color="midnightblue", dir="back", style="solid"];
+  Node0->Node3 [shape=plaintext, color="midnightblue", dir="back", style="solid"];
+}

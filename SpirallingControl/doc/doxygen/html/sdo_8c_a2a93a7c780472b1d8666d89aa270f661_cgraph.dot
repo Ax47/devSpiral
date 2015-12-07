@@ -1,0 +1,37 @@
+digraph "proceedSDO"
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="proceedSDO",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 [label="failedSDO",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sdo_8c.html#a50665fc13aa385b1b523013cf9166523",tooltip="Called when an internal SDO abort occurs. Release the line * Only if server * If client, the line must be released manually in the core application. The reason of that is to permit the program to read the transfers structure before its reset, because many informations are stored on it : index, subindex, data received or trasmited, ... In all cases, sends a SDO abort. "];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node3 [label="getSDOlineOnUse",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sdo_8c.html#a3a6660620ea5fb37d311afc3d9a301c2",tooltip="Search for the line, in the transfers array, which contains the beginning of the reception of a fragm..."];
+  Node2 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node4 [label="resetSDOline",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sdo_8c.html#a42d33be015d4c4c83c73f1f0e588f481",tooltip="Reset an unused line. "];
+  Node4 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node5 [label="initSDOline",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sdo_8c.html#aa570e2c8e69527298b428563a38ced9f",tooltip="Initialize some fields of the structure. "];
+  Node2 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node6 [label="sendSDOabort",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sdo_8c.html#a8d0032d382891d6804947e9514fe3720",tooltip="Transmit a SDO error to the client. The reasons may be : Read/Write to a undefined object Read/Write ..."];
+  Node6 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node7 [label="sendSDO",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sdo_8c.html#a2f61d90737fb951b4b33c05e9b9810d7",tooltip="Transmit a SDO frame on the bus bus_id. "];
+  Node1 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node8 [label="getSDOfreeLine",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sdo_8c.html#a58d1f9691977617601beb9e5b4123252",tooltip="Search for an unused line in the transfers array to store a new SDO. ie a line which value of the fie..."];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node1 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node9 [label="getSDOlineRestBytes",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sdo_8c.html#a7654021041675c1389fd2d1b590ff7cb",tooltip="Bytes in the line structure which must be transmited (or received) "];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node1 -> Node10 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node10 [label="lineToSDO",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sdo_8c.html#a2b662491084d03f3ad43d280a45ef23e",tooltip="Copy data from an existant line in the argument &quot;* data&quot;. "];
+  Node1 -> Node11 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node11 [label="objdictToSDOline",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sdo_8c.html#a29427a80fd1aeabff30bf0602fbc220f",tooltip="Copy the data from the object dictionary to the SDO line for a network transfer. "];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node1 -> Node12 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node12 [label="SDOlineToObjdict",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sdo_8c.html#a2eb5309dca3a7363da5e5e7230b85d58",tooltip="Copy the data received from the SDO line transfer to the object dictionary. "];
+  Node1 -> Node13 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node13 [label="SDOtoLine",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sdo_8c.html#a5efdbb02d210aad29c6d162600d3ae55",tooltip="Add data to an existant line. "];
+  Node1 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node1 -> Node14 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node14 [label="setSDOlineRestBytes",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sdo_8c.html#a7ca56a650c5daaa24c89370f3b3d7bb0",tooltip="Store in the line structure the nb of bytes which must be transmited (or received) ..."];
+}

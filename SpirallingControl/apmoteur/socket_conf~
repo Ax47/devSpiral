@@ -1,0 +1,7 @@
+#!/bin/bash
+sudo ifconfig can0 down
+echo "Network down"
+sudo ip link set can0 type can bitrate 1000000
+echo "Master BitRate set to 1M"
+sudo ifconfig can0 up
+echo "Network up"

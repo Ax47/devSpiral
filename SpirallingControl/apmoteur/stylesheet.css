@@ -1,0 +1,204 @@
+GtkWindow {
+    -GtkWidget-focus-line-width: 0;
+    -GtkWindow-resize-grip-height: 0;
+    -GtkWindow-resize-grip-width: 0;
+    background-color: #ccc;
+    font-size: 12px;
+}
+
+* {
+    font-size: 1em;
+    color: #000;
+}
+
+/** BOUTONS **/
+.stdButton GtkImage {padding-right:1em;}
+.lonelyButton GtkImage {padding:0.1em;}
+.stdButton GtkLabel {padding-right:1em;}
+
+
+.stdButton {
+    border: 0;
+    font-weight: bold;
+}
+.lonelyButton {
+    border: 0;
+    font-weight: bold;
+}
+
+.butGreen {
+    background: #39A036;
+    box-shadow: inset 0em 0em 1em #20601E;
+}
+.butGreen:hover {background: #32CF2D;}
+.butRed {
+    background: #D4614D;
+    box-shadow: inset 0em 0em 1em #D1361B;
+}
+.butRed:hover{background: #FF9E98;}
+.butBlack{
+    background: #3A3A3A;
+    box-shadow: inset 0em 0em 1em #000;
+}
+.butBlack:hover{background: #777777;}
+.butBlack GtkLabel {color:#C3C3C3;}
+
+
+.fontBig{font-size: 1.1em;}
+
+
+
+.box{border-radius:1em 1em 0 0;}
+.blackBox {
+    border-left: 3px solid #000;
+    border-right: 3px solid #000;
+    border-bottom: 3px solid #000;
+}
+.greenBox {
+    border-left: 3px solid #60995F;
+    border-right: 3px solid #60995F;
+    border-bottom: 3px solid #60995F;
+}
+.purpleBox {
+    border-left: 3px solid #973AA4;
+    border-right: 3px solid #973AA4;
+    border-bottom: 3px solid #973AA4;
+}
+.brownBox {
+    border-left: 3px solid #B08B49;
+    border-right: 3px solid #B08B49;
+    border-bottom: 3px solid #B08B49;
+}
+
+
+
+.cell {
+    border-radius:0;
+    padding:0.5em 1em 0.5em 1em;
+    border-left: #000 1px solid;
+    border-top: #000 1px solid;
+    background:transparent;
+}
+.imgCell {
+    border-radius:0;
+    padding:0;
+    border-left: #000 1px solid;
+    border-top: #000 1px solid;
+    background:transparent;
+}
+.cellTop {border-top:0;}
+.cellLeft {border-left:0;}
+.border-right{border-right:#000 3px solid;}
+
+.cell2 {
+    border-radius:0;
+    padding:0.5em 1em 0.5em 1em;
+    background:transparent;
+}
+
+
+.botTop { border-top: 1px solid #000;}
+.botBottom { border-bottom: 1px solid #000;}
+.botLeft { border-left: 1px solid #000;}
+.botRight { border-right: 1px solid #000;}
+
+.toolbar {
+    padding:0.5em 1em 0.5em 1em;
+    background:-gtk-gradient(linear,left top, left bottom, from(#243864), to(#54689D));
+    border: 0;
+    font-weight: bold;
+    color:#C3C3C3;
+    box-shadow: inset 0em 0em 1em #1C2439;
+}
+
+.toolbar GtkLabel {color:#C3C3C3;}
+.toolbar:hover {background:-gtk-gradient(linear,left top, left bottom, from(#54689D), to(#7995D3));}
+
+
+
+
+
+.h1 {
+
+    border-radius:1em 1em 0 0;
+    color:#fff;
+    padding:0.3em;
+    font-weight: bold;
+    border:0;
+    font-size:1.1em;
+}
+.black {background:-gtk-gradient(linear,left top, left bottom, from(#525252), to(#000));}
+.green {background:-gtk-gradient(linear,left top, left bottom, from(#246F20), to(#60995F));}
+.purple {background:-gtk-gradient(linear,left top, left bottom, from(#5C3661), to(#973AA4));}
+.brown {background:-gtk-gradient(linear,left top, left bottom, from(#78520F), to(#B08B49));}
+.red {background:-gtk-gradient(linear,left top, left bottom, from(#C93636), to(#F56060));}
+
+
+.Wtitle {
+    border-radius:0 0 1em 1em;
+    color:#fff;
+    font-weight:bold;
+    font-size:1.5em;
+/*    background:-gtk-gradient(linear,left top, left bottom, from(#C93636), to(#F56060));*/
+background:-gtk-gradient(linear,left top, left bottom, from(#525252), to(#000));
+}
+
+.gridTitle1 {
+/*    background: -gtk-gradient(linear,left top, left bottom, from(#000), to(#525252));;*/
+    background:#36325C;
+    color:#fff;
+    border-top:#000 solid 1px;
+    border-left:#000 solid 3px;
+    font-weight: bold;
+    padding:0.5em 1em 0.5em 1em;
+}
+.gridTitle2 {
+    background:#246F20;
+}
+.gridTitle3 {
+    background:#5C3661;
+}
+.gridTitle4 {
+    background:#78520F;
+
+    border-right:#000 3px solid;
+}
+.bold{font-weight:bold;}
+.th {
+    font-weight: bold;
+}
+
+.labDial {
+    padding-bottom:1em;
+}
+GtkDialog GtkImage {padding-right: 0.5em;}
+
+.statusBar {
+    background:-gtk-gradient(linear,left top, right top, from(#000), to(#525252));
+    border-radius: 0 0.4em 0.4em 0;
+    padding: 0.5em;
+    color:#fff;
+}
+
+.statusBarTitle {
+    background:#000;
+    font-weight: bold;
+    border-radius: 0.4em 0 0 0.4em;
+    padding: 0.5em;
+    color:#D43333;
+}
+
+.bottom {
+    border-bottom : 3px solid #000;
+}
+
+/*.vibre {*/
+/*animation: vibre 5s infinite linear;*/
+/*}*/
+/*@keyframes vibre {*/
+/*0% {background:#000; }*/
+/*25% {background:#ccc; }*/
+/*50% {background:#fff; }*/
+/*100% {background:#ccc;}*/
+/*}*/
+

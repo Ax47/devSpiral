@@ -1,0 +1,19 @@
+digraph "SyncAlarm"
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="SyncAlarm",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 [label="sendSYNC",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sync_8c.html#adee64da8e8e5ff05f1ff2be3c7fe2e5f",tooltip="Transmit a SYNC message and trigger sync TPDOs. "];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node3 [label="proceedSYNC",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sync_8c.html#ade5dd12cef515c82dae1fddc34d4e711",tooltip="This function is called when the node is receiving a SYNC message (cob-id = 0x80). "];
+  Node3 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node4 [label="_sendPDOevent",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__pdo.html#ga95c3686cda4e9e6f7c847d2d0bb88fe8",tooltip="Function iterates on all TPDO and look TPDO transmit type and content change before sending it..."];
+  Node4 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node5 [label="buildPDO",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$pdo_8c.html#a889902163641f6fc8039550cb11ec320",tooltip="Copy all the data to transmit in process_var Prepare the PDO defined at index to be sent *pwCobId : r..."];
+  Node5 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node6 [label="CopyBits",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$pdo_8c.html#ae468510c9f77f502207d961d26389918"];
+  Node2 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node7 [label="sendSYNCMessage",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sync_8c.html#a097cddb0103b1a8f56ecf976b03936a3",tooltip="Transmit a SYNC message on CAN bus. "];
+}

@@ -1,0 +1,69 @@
+app-title:
+python
+
+app-version:
+$Revision: 1.48 $
+
+cwd:
+/home/jalil/Documents/programmation/canfestival/v10/CanFestival-3-8bfe0ac00cdb/objdictgen
+
+date:
+Thu Sep 17 13:42:30 2015
+
+e-type:
+<type 'exceptions.NameError'>
+
+e-value:
+global name 'EntryName' is not defined
+
+locals:
+    pdolist: [6144, 6145, 6146, 6147, 6148, 6656, 6657, 6658, 6659, 6660]
+    sdolist: [4608]
+    strDeclareCallback: ''
+    texts: {'index': 4096, 'maxPDOtransmit': 0, 'NodeType': 'slave', 'Description': '', 'iam_a_slave': 1, 'EntryName': 'Device Type', 'NodeID': 0, 'NodeName': u'TestSlave2'}
+    headerfilepath: u'TestSlave2.h'
+    num: 0
+    strDefine: '\n#define valueRange_EMC 0x9F /* Type for index 0x1003 subindex 0x00 (only set of value 0 is possible) */'
+    Node: <node.Node instance at 0x7f606c0aa7a0>
+    index: 4096
+    indexCallbacks: {}
+    strSwitch: '    case valueRange_EMC:\n      if (*(UNS8*)value != (UNS8)0) return OD_VALUE_RANGE_EXCEEDED;\n      break;\n'
+    entry_infos: {'need': True, 'name': 'Device Type', 'struct': 1}
+    pointers_dict: {}
+    values: 301
+    strIndex: ''
+    pointedVariableContent: ''
+    add_id: '_test'
+    indexContents: {}
+    valueRangeContent: u'\n#define valueRange_EMC 0x9F /* Type for index 0x1003 subindex 0x00 (only set of value 0 is possible) */\nUNS32 TestSlave2_valueRangeTest (UNS8 typeValue, void * value)\n{\n  switch (typeValue) {\n    case valueRange_EMC:\n      if (*(UNS8*)value != (UNS8)0) return OD_VALUE_RANGE_EXCEEDED;\n      break;\n  }\n  return 0;\n}\n'
+    mappedVariableContent: ''
+    rangelist: []
+    communicationlist: [4096, 4097, 4099, 4101, 4102, 4112, 4113, 4116, 4119, 4120]
+    listIndex: [4096, 4097, 4099, 4101, 4102, 4112, 4113, 4116, 4119, 4120, 4608, 6144, 6145, 6146, 6147, 6148, 6656, 6657, 6658, 6659, 6660, 8192, 8193, 8194, 8195, 8196, 8197, 8198, 8199, 8200, 8201, 8202, 8203, 8204]
+    idx: 8204
+    variablelist: [8192, 8193, 8194, 8195, 8196, 8197, 8198, 8199, 8200, 8201, 8202, 8203, 8204]
+    strDeclareHeader: ''
+
+platform:
+Linux-3.13.0-61-generic-x86_64-with-Ubuntu-14.04-trusty
+
+python-version:
+2.7.6
+
+traceback:
+  File "objdictedit.py", line 721, in OnExportCMenu
+    result = self.Manager.ExportCurrentToCFile(filepath)
+  File "/home/jalil/Documents/programmation/canfestival/v10/CanFestival-3-8bfe0ac00cdb/objdictgen/nodemanager.py", line 356, in ExportCurrentToCFile
+    return gen_cfile.GenerateFile(filepath, self.CurrentNode)
+  File "/home/jalil/Documents/programmation/canfestival/v10/CanFestival-3-8bfe0ac00cdb/objdictgen/gen_cfile.py", line 599, in GenerateFile
+    content, header = GenerateFileContent(node, os.path.split(headerfilepath)[1], add_id,pointers_dict)
+  File "/home/jalil/Documents/programmation/canfestival/v10/CanFestival-3-8bfe0ac00cdb/objdictgen/gen_cfile.py", line 193, in GenerateFileContent
+    print EntryName
+<type 'exceptions.NameError'>: global name 'EntryName' is not defined
+
+wx-platform:
+__WXGTK__
+
+wx-version:
+2.8.12.1
+
