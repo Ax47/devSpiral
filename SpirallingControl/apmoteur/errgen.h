@@ -5,14 +5,26 @@
 extern UNS16 errgen_state;
 extern UNS8 errgen_laserState;
 
-void errgen_set(UNS8 dat);
-static void errgen_catch_err(UNS8 dat);
-static char* errgen_get_title(UNS8 dat);
-static char* errgen_get_content(UNS8 dat);
+void errgen_set(UNS16 dat);
+static void errgen_catch_err(UNS16 dat);
+static char* errgen_get_title(UNS16 dat);
+static char* errgen_get_content(UNS16 dat);
 
 #include "errgen_laser.h"
 #define LASER_ERROR(err)                     (0x80 | err)
+#define ERR_LASER_REINIT                    0x0100
+#define ERR_LASER_SERIAL_CONFIG             0x0101
 
+#define ERR_SLAVE_CONFIG_ROT_REFPOS         0x0102
+#define ERR_MASTER_CONFIG_PDOT2             0x0103
+#define ERR_LASER_ASSERV_START              0x0104
+#define ERR_LASER_ASSERV_STOP               0x0105
+#define ERR_LASER_SIMU_START                0x0106
+#define ERR_LASER_SIMU_STOP                 0x0107
+#define ERR_ROT_CALC_ACCEL                  0x0108
+#define ERR_ROT_WRITE_ACCEL                 0x0109
+#define ERR_ROT_GET_ACCEL                   0x0110
+#define ERR_ROT_GET_DECEL                   0x0111
 
 #define ERR_DRIVER_UP                        0x01
 #define ERR_DRIVER_LOAD                      0x02

@@ -85,7 +85,7 @@ void gui_entry_set(gchar* ent_id, char* labtxt) {
     gtk_entry_set_text(gui_get_entry(ent_id),labtxt);
 }
 
-gchar* gui_entry_get(gchar* ent_id) {
+const gchar* gui_entry_get(gchar* ent_id) {
     return gtk_entry_get_text(gui_get_entry(ent_id));
 }
 
@@ -152,7 +152,7 @@ void gui_info_box(char* boxTitle, char* boxContent, char* icon) {
     gtk_dialog_run(gui_get_dialog("windowDialInit"));
 }
 
-GThreadFunc gui_init() {
+gpointer gui_init(gpointer arg) {
     // Initialisation variable GTK
     GError *csserror = NULL;
     XInitThreads(); // A mettre avant gtk_init
@@ -176,6 +176,9 @@ GThreadFunc gui_init() {
     gtksig_init();
     keyword_init();
     gtk_widget_show_all (gui_get_widget("mainWindow"));
+    //gtk_widget_set_visible(gui_get_widget("but_LaserSimuStart"),0);
+
+
     gtk_main();
     return 0;
 }

@@ -93,7 +93,13 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="keyword.h" />
+		<Unit filename="laser/Laser_Close_Cfile_gen.h" />
 		<Unit filename="laser/errgen_laser.h" />
+		<Unit filename="laser/gui/gtk_test.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="laser/gui/gtk_test.h" />
+		<Unit filename="laser/gui/gtk_user_defs.h" />
 		<Unit filename="laser/laser.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -102,6 +108,13 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="laser/laser_asserv.h" />
+		<Unit filename="laser/laser_asserv_cst.h" />
+		<Unit filename="laser/laser_simulation.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="laser/laser_simulation.h" />
+		<Unit filename="laser/laser_stop.sh" />
+		<Unit filename="laser/serial_conf.sh" />
 		<Unit filename="laser/struct_laser.h" />
 		<Unit filename="lsstools.c">
 			<Option compilerVar="CC" />
@@ -129,6 +142,7 @@
 		</Unit>
 		<Unit filename="strtools.h" />
 		<Unit filename="stylesheet.css" />
+		<Unit filename="test.sh" />
 		<Extensions>
 			<code_completion />
 			<debugger />

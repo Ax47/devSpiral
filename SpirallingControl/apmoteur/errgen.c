@@ -7,14 +7,14 @@
 UNS16 errgen_state = 0x0000;
 UNS8 errgen_laserState = 0x00;
 
-void errgen_set(UNS8 dat) {
+void errgen_set(UNS16 dat) {
     errgen_state = dat;
     errgen_catch_err(dat);
 }
 
-static void errgen_catch_err(UNS8 dat) {
+static void errgen_catch_err(UNS16 dat) {
     char* title = strtools_concat(ERROR, " : ", strtools_gnum2str(&dat,0x05)," ",errgen_get_title(dat), NULL);
-    char* content = strtools_concat(errgen_get_content(dat),"\n",ERROR, " : ", strtools_gnum2str(&dat,0x05),NULL);
+    char* content = strtools_concat(errgen_get_content(dat),"\n",ERROR, " : ", strtools_gnum2str(&dat,uint16),NULL);
     if (dat == ERR_GUI_LOOP_RUN) {
         printf("%s",title);
         printf("\n");
@@ -31,10 +31,9 @@ static void errgen_catch_err(UNS8 dat) {
         dat == ERR_MASTER_CONFIG ||
         dat == ERR_SLAVE_CONFIG ||
         dat == ERR_LSS_CONFIG ||
-        dat == ERR_SLAVE_CONFIG_MOTOR_SON ||
+        dat == ERR_SLAVE_CONFIG_MOTOR_SON
         //laser erreurs fatales
-        dat == ERR_LASER_FATAL ||
-        dat == ERR_LASER_INIT_FATAL
+        //dat == ERR_LASER_INIT_FATAL
     ) {
         content = strtools_concat(content,"\n\n",APPLICATION_SHUTDOWN,NULL);
         gui_info_box(title,content,NULL);
@@ -46,7 +45,7 @@ static void errgen_catch_err(UNS8 dat) {
 
 
 
-static char* errgen_get_title(UNS8 dat) {
+static char* errgen_get_title(UNS16 dat) {
     if (dat == ERR_DRIVER_UP) return ERR_DRIVER_UP_TITLE;
     if (dat == ERR_DRIVER_LOAD) return ERR_DRIVER_LOAD_TITLE;
     if (dat == ERR_DRIVER_OPEN) return ERR_DRIVER_OPEN_TITLE;
@@ -61,6 +60,7 @@ static char* errgen_get_title(UNS8 dat) {
     if (dat == ERR_MASTER_CONFIG_PDOR2) return ERR_MASTER_CONFIG_PDOR2_TITLE;
     if (dat == ERR_MASTER_CONFIG_PDOR3) return ERR_MASTER_CONFIG_PDOR3_TITLE;
     if (dat == ERR_MASTER_CONFIG_PDOT1) return ERR_MASTER_CONFIG_PDOT1_TITLE;
+    if (dat == ERR_MASTER_CONFIG_PDOT2) return ERR_MASTER_CONFIG_PDOT2_TITLE;
     if (dat == ERR_MASTER_CONFIG) return ERR_MASTER_CONFIG_TITLE;
     if (dat == ERR_LSS_CONFIG) return ERR_LSS_CONFIG_TITLE;
     if (dat == ERR_SLAVE_CONFIG) return ERR_SLAVE_CONFIG_TITLE;
@@ -80,6 +80,7 @@ static char* errgen_get_title(UNS8 dat) {
     if (dat == ERR_SLAVE_CONFIG_TORQUE_SLOPE) return ERR_SLAVE_CONFIG_TORQUE_SLOPE_TITLE;
     if (dat == ERR_SLAVE_CONFIG_TORQUE_MAX_VELOCITY) return ERR_SLAVE_CONFIG_TORQUE_MAX_VELOCITY_TITLE;
     if (dat == ERR_SLAVE_CONFIG_MOTOR_SON) return ERR_SLAVE_CONFIG_MOTOR_SON_TITLE;
+    if (dat == ERR_SLAVE_CONFIG_ROT_REFPOS) return ERR_SLAVE_CONFIG_ROT_REFPOS_TITLE;
     if (dat == ERR_SLAVE_SAVE_CONFIG) return ERR_SLAVE_SAVE_CONFIG_TITLE;
     if (dat == ERR_MOTOR_PAUSE) return ERR_MOTOR_PAUSE_TITLE;
     if (dat == ERR_MOTOR_RUN) return ERR_MOTOR_RUN_TITLE;
@@ -98,22 +99,34 @@ static char* errgen_get_title(UNS8 dat) {
     if (dat == ERR_SAVE_FILE_GEN) return ERR_SAVE_FILE_GEN_TITLE;
     //laser
     if (dat == ERR_LASER_INIT_FATAL) return ERR_LASER_INIT_FATAL_TITLE;
-    if (dat == ERR_LASER_FATAL) return ERR_LASER_FATAL_TITLE;
-    if (dat == LASER_MASTER_INIT_ERROR) return ERR_LASER_MASTER_INIT_TITLE;
-    if (dat == LASER_SLAVE_INIT_ERROR) return ERR_LASER_SLAVE_INIT_TITLE;
-    if (dat == LASER_MASTER_INIT_ERROR2) return ERR_LASER_MASTER_INIT2_TITLE;
-    if (dat == LASER_SLAVE_INIT_ERROR2) return ERR_LASER_SLAVE_INIT2_TITLE;
-    if (dat == MASTER_NOT_READY) return ERR_MASTER_NOT_READY_TITLE;
-    if (dat == SLAVE_NOT_READY) return ERR_SLAVE_NOT_READY_TITLE;
+    if (dat == LASER_ERROR(ERR_LASER_FATAL)) return ERR_LASER_FATAL_TITLE;
+    if (dat == LASER_ERROR(LASER_MASTER_INIT_ERROR)) return ERR_LASER_MASTER_INIT_TITLE;
+    if (dat == LASER_ERROR(LASER_SLAVE_INIT_ERROR)) return ERR_LASER_SLAVE_INIT_TITLE;
+    if (dat == LASER_ERROR(LASER_MASTER_INIT_ERROR2)) return ERR_LASER_MASTER_INIT2_TITLE;
+    if (dat == LASER_ERROR(LASER_SLAVE_INIT_ERROR2)) return ERR_LASER_SLAVE_INIT2_TITLE;
+    if (dat == LASER_ERROR(MASTER_NOT_STARTED)) return ERR_MASTER_NOT_STARTED_TITLE;
+    if (dat == LASER_ERROR(SLAVE_NOT_STARTED)) return ERR_SLAVE_NOT_STARTED_TITLE;
     if (dat == LASER_ERROR(LASER_MASTER_START_ERROR)) return ERR_LASER_MASTER_START_ERROR_TITLE;
     if (dat == LASER_ERROR(LASER_SLAVE_START_ERROR)) return ERR_LASER_SLAVE_START_ERROR_TITLE;
     if (dat == LASER_ERROR(LASER_GETPOSOFFSET_ERROR)) return ERR_LASER_GETPOSOFFSET_ERROR_TITLE;
     if (dat == LASER_ERROR(LASER_MASTER_EXIT_ERROR)) return ERR_LASER_MASTER_EXIT_TITLE;
     if (dat == LASER_ERROR(LASER_MASTER_EXIT_ERROR)) return ERR_LASER_MASTER_EXIT_TITLE;
+    if (dat == ERR_LASER_REINIT) return ERR_LASER_REINIT_TITLE;
+    if (dat == ERR_LASER_SERIAL_CONFIG) return ERR_LASER_SERIAL_CONFIG_TITLE;
+
+
+    if (dat == ERR_LASER_ASSERV_START) return ERR_LASER_ASSERV_TITLE;
+    if (dat == ERR_LASER_ASSERV_STOP) return ERR_LASER_ASSERV_TITLE;
+    if (dat == ERR_LASER_SIMU_START) return ERR_LASER_SIMU_TITLE;
+    if (dat == ERR_LASER_SIMU_STOP) return ERR_LASER_SIMU_TITLE;
+    if (dat == ERR_ROT_CALC_ACCEL) return ERR_ROT_TITLE;
+    if (dat == ERR_ROT_WRITE_ACCEL) return ERR_ROT_TITLE;
+    if (dat == ERR_ROT_GET_ACCEL) return ERR_ROT_TITLE;
+    if (dat == ERR_ROT_GET_DECEL) return ERR_ROT_TITLE;
 
 }
 
-static char* errgen_get_content(UNS8 dat) {
+static char* errgen_get_content(UNS16 dat) {
     if (dat == ERR_DRIVER_UP) return ERR_DRIVER_UP_CONTENT;
     if (dat == ERR_DRIVER_LOAD) return ERR_DRIVER_LOAD_CONTENT;
     if (dat == ERR_DRIVER_OPEN) return ERR_DRIVER_OPEN_CONTENT;
@@ -128,6 +141,7 @@ static char* errgen_get_content(UNS8 dat) {
     if (dat == ERR_MASTER_CONFIG_PDOR2) return ERR_MASTER_CONFIG_PDOR2_CONTENT;
     if (dat == ERR_MASTER_CONFIG_PDOR3) return ERR_MASTER_CONFIG_PDOR3_CONTENT;
     if (dat == ERR_MASTER_CONFIG_PDOT1) return ERR_MASTER_CONFIG_PDOT1_CONTENT;
+    if (dat == ERR_MASTER_CONFIG_PDOT2) return ERR_MASTER_CONFIG_PDOT2_CONTENT;
     if (dat == ERR_MASTER_CONFIG) return ERR_MASTER_CONFIG_CONTENT;
     if (dat == ERR_LSS_CONFIG) return ERR_LSS_CONFIG_CONTENT;
     if (dat == ERR_SLAVE_CONFIG) return ERR_SLAVE_CONFIG_CONTENT;
@@ -147,6 +161,7 @@ static char* errgen_get_content(UNS8 dat) {
     if (dat == ERR_SLAVE_CONFIG_TORQUE_SLOPE) return ERR_SLAVE_CONFIG_TORQUE_SLOPE_CONTENT;
     if (dat == ERR_SLAVE_CONFIG_TORQUE_MAX_VELOCITY) return ERR_SLAVE_CONFIG_TORQUE_MAX_VELOCITY_CONTENT;
     if (dat == ERR_SLAVE_CONFIG_MOTOR_SON) return ERR_SLAVE_CONFIG_MOTOR_SON_CONTENT;
+    if (dat == ERR_SLAVE_CONFIG_ROT_REFPOS) return ERR_SLAVE_CONFIG_ROT_REFPOS_CONTENT;
     if (dat == ERR_SLAVE_SAVE_CONFIG) return ERR_SLAVE_SAVE_CONFIG_CONTENT;
     if (dat == ERR_MOTOR_PAUSE) return ERR_MOTOR_PAUSE_CONTENT;
     if (dat == ERR_MOTOR_RUN) return ERR_MOTOR_RUN_CONTENT;
@@ -164,18 +179,34 @@ static char* errgen_get_content(UNS8 dat) {
     if (dat == ERR_DECELERATION_QS_SAVE) return ERR_DECELERATION_QS_SAVE_CONTENT;
     if (dat == ERR_SAVE_FILE_GEN) return ERR_SAVE_FILE_GEN_CONTENT;
     //laser
-    if (dat == ERR_LASER_FATAL) return ERR_LASER_FATAL_CONTENT;
+    if (dat == LASER_ERROR(ERR_LASER_FATAL)) return ERR_LASER_FATAL_CONTENT;
     if (dat == ERR_LASER_INIT_FATAL) return ERR_LASER_INIT_FATAL_CONTENT;
+    if (dat == LASER_ERROR(LASER_GETPOSOFFSET_ERROR)) return ERR_LASER_GETPOSOFFSET_ERROR_CONTENT;
     if (dat == LASER_ERROR(LASER_MASTER_INIT_ERROR)) return ERR_LASER_MASTER_INIT_CONTENT;
     if (dat == LASER_ERROR(LASER_SLAVE_INIT_ERROR)) return ERR_LASER_SLAVE_INIT_CONTENT;
     if (dat == LASER_ERROR(LASER_MASTER_INIT_ERROR2)) return ERR_LASER_MASTER_INIT2_CONTENT;
     if (dat == LASER_ERROR(LASER_SLAVE_INIT_ERROR2)) return ERR_LASER_SLAVE_INIT2_CONTENT;
-    if (dat == LASER_ERROR(MASTER_NOT_READY)) return ERR_MASTER_NOT_READY_CONTENT;
-    if (dat == LASER_ERROR(SLAVE_NOT_READY)) return ERR_SLAVE_NOT_READY_CONTENT;
+    if (dat == LASER_ERROR(MASTER_NOT_STARTED)) return ERR_MASTER_NOT_STARTED_CONTENT;
+    if (dat == LASER_ERROR(SLAVE_NOT_STARTED)) return ERR_SLAVE_NOT_STARTED_CONTENT;
     if (dat == LASER_ERROR(LASER_MASTER_START_ERROR)) return ERR_LASER_MASTER_START_ERROR_CONTENT;
     if (dat == LASER_ERROR(LASER_SLAVE_START_ERROR)) return ERR_LASER_SLAVE_START_ERROR_CONTENT;
     if (dat == LASER_ERROR(LASER_MASTER_EXIT_ERROR)) return ERR_LASER_MASTER_EXIT_CONTENT;
     if (dat == LASER_ERROR(LASER_SLAVE_EXIT_ERROR)) return ERR_LASER_SLAVE_EXIT_CONTENT;
+    if (dat == ERR_LASER_REINIT) return ERR_LASER_REINIT_CONTENT;
+    if (dat == ERR_LASER_SERIAL_CONFIG) return ERR_LASER_SERIAL_CONFIG_CONTENT;
+
+
+
+    if (dat == ERR_LASER_ASSERV_START) return ERR_LASER_ASSERV_START_CONTENT;
+    if (dat == ERR_LASER_ASSERV_STOP) return ERR_LASER_ASSERV_STOP_CONTENT;
+    if (dat == ERR_LASER_SIMU_START) return ERR_LASER_SIMU_START_CONTENT;
+    if (dat == ERR_LASER_SIMU_STOP) return ERR_LASER_SIMU_STOP_CONTENT;
+
+    if (dat == ERR_ROT_CALC_ACCEL) return ERR_ROT_CALC_ACCEL_CONTENT;
+    if (dat == ERR_ROT_WRITE_ACCEL) return ERR_ROT_WRITE_ACCEL_CONTENT;
+    if (dat == ERR_ROT_GET_ACCEL) return ERR_ROT_CALC_ACCEL_CONTENT;
+    if (dat == ERR_ROT_GET_DECEL) return ERR_ROT_GET_DECEL_CONTENT;
+
 
 }
 

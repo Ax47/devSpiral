@@ -13,8 +13,10 @@ struct laser_struct
 {
   pthread_t recv_thread;
   pthread_mutex_t mutex;
+  int isSimu;
   int fd;
   char portName[255];
+  int portNumber;
   int running;
   int ready_for_analyse;
   struct laser_data laser_dat[ORDRE_APPROX];

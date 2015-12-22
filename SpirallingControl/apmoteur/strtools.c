@@ -179,6 +179,8 @@ gchar* strtools_gnum2str(void *data,UNS8 type) {
         return g_strdup_printf ("%#.4X", (UNS16)*pdata);
     } else if (type == 0x07) {
         return g_strdup_printf ("%#.8X", (UNS32)*pdata);
+    } else if (type == 0x50) {
+        return g_strdup_printf ("%u", (UNS32)*pdata);
     } else {
         printf("num2str error : Type inconnu\n"); exit(1);
     }

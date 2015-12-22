@@ -12,6 +12,10 @@
 #include "motor.h"
 #include "od_callback.h"
 #include "errgen.h"
+#include "gtksig.h"
+
+#include "laser_asserv.h"
+
 
 static int SDO_step_error = 0;
 
@@ -152,7 +156,7 @@ int cantools_write_local(UNS16 Mindex, UNS8 Msubindex, void* data, UNS32 datsize
 /**
 * Configuration du type de transmission des PDOs
 **/
-int cantools_PDO_trans(UNS8 nodeID, UNS16 index, UNS8 trans, UNS16 inhibit) {
+int cantools_PDO_trans(UNS8 nodeID, UNS16 index, UNS8 trans, UNS16 inhibit, UNS8 comp_entry, UNS16 event_timer) {
     UNS16 cobID;
     if (index == 0x1800) cobID = 0x0180;
     if (index == 0x1801) cobID = 0x0280;
@@ -160,9 +164,11 @@ int cantools_PDO_trans(UNS8 nodeID, UNS16 index, UNS8 trans, UNS16 inhibit) {
     if (index == 0x1803) cobID = 0x0480;
     UNS32 EnabledCobid = 0x40000000 + cobID + nodeID;
     UNS32 DisabledCobid = 0x80000000 + cobID + nodeID;
-    SDOR SDO_trans = {index,0x02,0x05};
     SDOR SDO_cobid = {index,0x01,0x07};
+    SDOR SDO_trans = {index,0x02,0x05};
     SDOR SDO_inhib = {index,0x03,0x06};
+    SDOR SDO_comp_entry = {index, 0x04, uint8};
+    SDOR SDO_event_timer = {index, 0x05, uint16};
 
     // Désactivation pour modification
     if(!cantools_write_sdo(nodeID,SDO_cobid,&DisabledCobid)) {
@@ -175,11 +181,21 @@ int cantools_PDO_trans(UNS8 nodeID, UNS16 index, UNS8 trans, UNS16 inhibit) {
         return 0;
     }
     // Modification de l'inhibit
-    if (inhibit != 0x0000) {
-        if(!cantools_write_sdo(nodeID,SDO_inhib,&inhibit)) {
-            printf("Erreur : inhib\n");
-            return 0;
-        }
+    if(!cantools_write_sdo(nodeID,SDO_inhib,&inhibit)) {
+        printf("Erreur : inhib\n");
+        return 0;
+    }
+    /*
+    // Modification de compatibility entry
+    if(!cantools_write_sdo(nodeID,SDO_comp_entry,&comp_entry)) {
+        printf("Erreur : comp entry\n");
+        return 0;
+    }
+    */
+    // Modification de event timer
+    if(!cantools_write_sdo(nodeID,SDO_event_timer,&event_timer)) {
+        printf("Erreur : event timer\n");
+        return 0;
     }
     // Activation transmission
     if (!cantools_write_sdo(nodeID,SDO_cobid,&EnabledCobid)) {
@@ -189,7 +205,58 @@ int cantools_PDO_trans(UNS8 nodeID, UNS16 index, UNS8 trans, UNS16 inhibit) {
     return 1;
 }
 
+/**
+* Configuration du type de reception des PDOs
+**/
+int cantools_PDO_recv(UNS8 nodeID, UNS16 index, UNS8 trans, UNS16 inhibit, UNS8 comp_entry, UNS16 event_timer) {
+    UNS16 cobID;
+    if (index == 0x1400) cobID = 0x0180;
+    if (index == 0x1401) cobID = 0x0280;
+    if (index == 0x1402) cobID = 0x0380;
+    if (index == 0x1403) cobID = 0x0480;
+    UNS32 EnabledCobid = 0x40000000 + cobID + nodeID;
+    UNS32 DisabledCobid = 0x80000000 + cobID + nodeID;
+    SDOR SDO_trans = {index,0x02,0x05};
+    SDOR SDO_cobid = {index,0x01,0x07};
+    SDOR SDO_inhib = {index,0x03,0x06};
+    SDOR SDO_comp_entry = {index, 0x04, uint8};
+    SDOR SDO_event_timer = {index, 0x05, uint16};
 
+    // Désactivation pour modification
+    if(!cantools_write_sdo(nodeID,SDO_cobid,&DisabledCobid)) {
+        printf("Erreur : desactivation\n");
+        return 0;
+    }
+    // Modification transmission
+    if(!cantools_write_sdo(nodeID,SDO_trans,&trans)) {
+        printf("Erreur : trans\n");
+        return 0;
+    }
+    // Modification de l'inhibit
+    if(!cantools_write_sdo(nodeID,SDO_inhib,&inhibit)) {
+        printf("Erreur : inhib\n");
+        return 0;
+    }
+    /*
+    // Modification de compatibility entry
+    if(!cantools_write_sdo(nodeID,SDO_comp_entry,&comp_entry)) {
+        printf("Erreur : comp entry\n");
+        return 0;
+    }
+    */
+    // Modification de event timer
+    if(!cantools_write_sdo(nodeID,SDO_event_timer,&event_timer)) {
+        printf("Erreur : event timer\n");
+        return 0;
+    }
+
+    // Activation transmission
+    if (!cantools_write_sdo(nodeID,SDO_cobid,&EnabledCobid)) {
+        printf("Erreur : activation %#.8x\n", EnabledCobid);
+        return 0;
+    }
+    return 1;
+}
 /**
 * Configuration des PDO map d'un esclave
 * UNS32 PDOMapData : index + subindex + size : 60400020
@@ -255,120 +322,458 @@ int cantools_PDO_map_config(UNS8 nodeID, UNS16 PDOMapIndex,...) {
     return 1;
 }
 
-/**
-* INITIALISATION LOOP
-**/
-GThreadFunc cantools_init_loop() {
-    int i,k=0;
-    INTEGER32 j = 0;
-    //Init Laser
+
+UNS32 pdonum_for_thread_trsl;
+gpointer cantools_waitStopTrsl_Thread (gpointer pdonum)
+{
+    int apply0 = 1;
+    while (abs(Velocity_V)>3){
+        usleep(100);
+        if(abs(Vel2Send_V)>1){
+            apply0 = 0;
+            break;
+        }
+    }
+    if(apply0){
+        Vel2Send_V = 0;
+        printf("pdonum = %d\n\n\n\n\n", *(UNS32*)pdonum);
+
+        EnterMutex();
+        PDOEventTimerAlarm(&SpirallingMaster_Data, *(UNS32*)pdonum);
+        LeaveMutex();
+    }
+
+    g_thread_exit(NULL);
+}
+
+void cantools_ApplyVitTrans(INTEGER32 * vit)
+{
+    int i;
+    UNS32 pdonum;
+    INTEGER32 vtm, vtc;
+    //printf("7\n");
+    EnterMutex();
+    if(Vel2Send_V != *vit)
+        Vel2Send_V = *vit;
+    LeaveMutex();
+
+    for (i=0;i<SLAVE_NUMBER; i++){
+        if(!strcmp(slave_get_id_with_index(i),"vitesse")){
+            //printf("8\n");
+            EnterMutex();
+            vtm = Velocity_V;
+            vtc = Vel2Send_V;
+            LeaveMutex();
+            pdonum = (slave_get_node_with_index(i)-0x02)*1;
+            //gerer les problèmes de non-application de l'acceleration au demarrage et a l'arrêt
+            if(vtm == 0 || vtc == 0){
+                if((vtm == 0) && (vtc != 0)){
+                    Vel2Send_V = vtc/abs(vtc);
+                    EnterMutex();
+                    PDOEventTimerAlarm(&SpirallingMaster_Data, pdonum);
+                    Vel2Send_V = vtc;
+                    LeaveMutex();
+                    usleep(1000);
+                } else if ((vtc == 0) && (vtm != 0)) {
+                    pdonum_for_thread_trsl = pdonum;
+                    Vel2Send_V = vtm/abs(vtm);
+                    EnterMutex();
+                    PDOEventTimerAlarm(&SpirallingMaster_Data, pdonum);
+                    LeaveMutex();
+
+                    if(g_thread_try_new(NULL, cantools_waitStopTrsl_Thread, &pdonum_for_thread_trsl, NULL) == NULL){
+                        //bloquer le moteur direct
+                        Vel2Send_V = vtc;
+                        EnterMutex();
+                        PDOEventTimerAlarm(&SpirallingMaster_Data, pdonum);
+                        LeaveMutex();
+                    }
+
+                    return;
+                } else return;//la vitesse de 0 est déjà appliquée.
+
+            }
+            EnterMutex();
+            PDOEventTimerAlarm(&SpirallingMaster_Data, pdonum);
+            LeaveMutex();
+        }
+        //ajouter mt couple translation
+
+    }
+}
+
+UNS32 pdonum_for_thread_rot;
+gpointer cantools_waitStopRot_Thread (gpointer pdonum)
+{
+    int apply0 = 1;
+    while (abs(CaptureVitesse_MotRot)>3){
+        usleep(100);
+        if(abs(ConsigneVitesse_MotRot) > 1){
+            apply0 = 0;
+            break;
+        }
+    }
+    if(apply0){
+        ConsigneVitesse_MotRot = 0;
+        printf("pdonum = %d\n\n\n\n\n", *(UNS32*)pdonum);
+
+        EnterMutex();
+        PDOEventTimerAlarm(&SpirallingMaster_Data, *(UNS32*)pdonum);
+        LeaveMutex();
+    }
+
+    g_thread_exit(NULL);
+}
+
+void cantools_ApplyVitRot(INTEGER32 * vit)
+{
+    int i;
+    INTEGER32 vtm, vtc;
+    UNS32 pdonum;
+    printf("cantools_ApplyVitRot\n");
+    ConsigneVitesse_MotRot = *vit;
+
+    for (i=0;i<SLAVE_NUMBER; i++){
+        if(!strcmp(slave_get_id_with_index(i),"rotation")){
+
+            EnterMutex();
+            vtm = CaptureVitesse_MotRot;
+            vtc = ConsigneVitesse_MotRot;
+            LeaveMutex();
+            pdonum = (slave_get_node_with_index(i)-0x02)*1;
+            //gerer les problèmes de non-application de l'acceleration au demarrage et a l'arrêt
+            if(vtm == 0 || vtc == 0){
+                if((vtm == 0) && (vtc != 0)){
+                    ConsigneVitesse_MotRot = vtc/abs(vtc);
+                    EnterMutex();
+                    PDOEventTimerAlarm(&SpirallingMaster_Data, pdonum);
+                    ConsigneVitesse_MotRot = vtc;
+                    LeaveMutex();
+                    usleep(1000);
+                } else if ((vtc == 0) && (vtm != 0)) {
+                    pdonum_for_thread_rot = pdonum;
+                    ConsigneVitesse_MotRot = vtm/abs(vtm);
+                    EnterMutex();
+                    PDOEventTimerAlarm(&SpirallingMaster_Data, pdonum);
+                    LeaveMutex();
+
+                    if(g_thread_try_new(NULL, cantools_waitStopRot_Thread, &pdonum_for_thread_rot, NULL) == NULL){
+                        //bloquer le moteur direct
+                        ConsigneVitesse_MotRot = vtc;
+                        EnterMutex();
+                        PDOEventTimerAlarm(&SpirallingMaster_Data, pdonum);
+                        LeaveMutex();
+                    }
+                    return;
+                } else return;//la vitesse de 0 est déjà appliquée.
+
+            }
+            EnterMutex();
+            PDOEventTimerAlarm(&SpirallingMaster_Data, pdonum);
+            LeaveMutex();
+
+        }
+        //ajouter moteurs couples rotation
+    }
+
+}
+
+static int gtksig_in_reinit_laser = 0;
+int cantools_init_laser(void)
+{
     unsigned int err_l;
     unsigned int laser_state;
     struct laser_data d;
 
+    if(gtksig_in_reinit_laser) errgen_laserState = 0;
+
+    /**configuring serial port acces permissions**/
+    if(Laser_serial_config()){
+        errgen_set(ERR_LASER_SERIAL_CONFIG);
+        return 1;
+    }
+
     /**INIT 2 LASER**/
     if(err_l = Laser_Init2Laser(&ml, &sl)){
-        printf ("err_l = %x", err_l);
         if(err_l == ERR_LASER_INIT_FATAL){
+            printf("1\n");
             errgen_set(ERR_LASER_INIT_FATAL);
             errgen_laserState = ERR_LASER_INIT_FATAL;
-            return;
+            return 1;
         }
         if(err_l == LASER_MASTER_INIT_ERROR){
-          errgen_set(LASER_ERROR(LASER_MASTER_INIT_ERROR));
-          errgen_laserState = MASTER_NOT_READY;
-          if(Laser_Start1Laser(&sl)){
-            errgen_set(ERR_LASER_INIT_FATAL);
-            return;
-          }
+            printf("2\n");
+            errgen_set(LASER_ERROR(LASER_MASTER_INIT_ERROR));
+            errgen_laserState = MASTER_NOT_STARTED;
+            if(Laser_Start1Laser(&sl)){
+                printf("3\n");
+                errgen_set(ERR_LASER_INIT_FATAL);
+                errgen_laserState = ERR_LASER_INIT_FATAL;
+                return 1;
+            }
+            else{
+                gui_image_set("imgLaserGStatInfo", "gtk-no", 2);
+                gui_image_set("imgLaserDStatInfo", "gtk-yes", 2);
+                gui_label_set("labLaser1StatInfo", MASTER_NOT_STARTED_LABEL);
+                gui_label_set("labLaser2StatInfo", LASER_STATUS_OK_LABEL);
+            }
         }
         else if (err_l == LASER_MASTER_INIT_ERROR2){
-          errgen_set(LASER_ERROR(LASER_MASTER_INIT_ERROR2));
-          errgen_laserState = MASTER_NOT_READY;
-          if(Laser_Start1Laser(&sl)){
-            errgen_set(ERR_LASER_INIT_FATAL);
-            return;
-          }
+            printf("4\n");
+            errgen_set(LASER_ERROR(LASER_MASTER_INIT_ERROR2));
+            errgen_laserState = MASTER_NOT_STARTED;
+            if(Laser_Start1Laser(&sl)){
+                printf("5\n");
+                errgen_laserState = ERR_LASER_INIT_FATAL;
+                errgen_set(ERR_LASER_INIT_FATAL);
+                return 1;
+            }
+            else{
+                gui_image_set("imgLaserGStatInfo", "gtk-no", 2);
+                gui_image_set("imgLaserDStatInfo", "gtk-yes", 2);
+                gui_label_set("labLaser1StatInfo", MASTER_NOT_STARTED_LABEL);
+                gui_label_set("labLaser2StatInfo", LASER_STATUS_OK_LABEL);
+            }
         }
         else if (err_l == LASER_SLAVE_INIT_ERROR){
-          errgen_set(LASER_ERROR(LASER_SLAVE_INIT_ERROR));
-          errgen_laserState = SLAVE_NOT_READY;
-          if(Laser_Start1Laser(&ml)){
-            errgen_set(ERR_LASER_INIT_FATAL);
-            return;
+            printf("6\n");
+            errgen_set(LASER_ERROR(LASER_SLAVE_INIT_ERROR));
+            errgen_laserState = SLAVE_NOT_STARTED;
+            if(Laser_Start1Laser(&ml)){
+                printf("7\n");
+                errgen_set(ERR_LASER_INIT_FATAL);
+                errgen_laserState = ERR_LASER_INIT_FATAL;
+                return 1;
+            }
+            else{
+                gui_image_set("imgLaserGStatInfo", "gtk-yes", 2);
+                gui_image_set("imgLaserDStatInfo", "gtk-no", 2);
+                gui_label_set("labLaser1StatInfo", LASER_STATUS_OK_LABEL);
+                gui_label_set("labLaser2StatInfo", SLAVE_NOT_STARTED_LABEL);
             }
         }
         else if (err_l == LASER_SLAVE_INIT_ERROR2){
-          errgen_set(LASER_ERROR(LASER_SLAVE_INIT_ERROR2));
-          errgen_laserState = SLAVE_NOT_READY;
-          if(Laser_Start1Laser(&ml)){
-            errgen_set(ERR_LASER_INIT_FATAL);
-            return;
+            printf("8\n");
+            errgen_set(LASER_ERROR(LASER_SLAVE_INIT_ERROR2));
+            errgen_laserState = SLAVE_NOT_STARTED;
+            if(Laser_Start1Laser(&ml)){
+                printf("9\n");
+                errgen_set(ERR_LASER_INIT_FATAL);
+                errgen_laserState = ERR_LASER_INIT_FATAL;
+                return 1;
             }
-         }
+            else{
+                gui_image_set("imgLaserGStatInfo", "gtk-yes", 2);
+                gui_image_set("imgLaserDStatInfo", "gtk-no", 2);
+                gui_label_set("labLaser1StatInfo", LASER_STATUS_OK_LABEL);
+                gui_label_set("labLaser2StatInfo", SLAVE_NOT_STARTED_LABEL);
+            }
+        }
     }
     else{
         /**START 2 LASER**/
         if(err_l = Laser_Start2Laser(&ml, &sl)){
             if(err_l == ERR_LASER_INIT_FATAL){
                 if(err_l & LASER_GETPOSOFFSET_ERROR){
-                errgen_set(LASER_ERROR(LASER_GETPOSOFFSET_ERROR));
+                    errgen_set(LASER_ERROR(LASER_GETPOSOFFSET_ERROR));
                 }
-            errgen_laserState = ERR_LASER_INIT_FATAL;
-            errgen_set(ERR_LASER_INIT_FATAL);
-            return;
+                printf("10\n");
+                errgen_laserState = ERR_LASER_INIT_FATAL;
+                errgen_set(ERR_LASER_INIT_FATAL);
+                return 1;
             }
-
             if(err_l == LASER_MASTER_START_ERROR){
-            errgen_set(LASER_ERROR(LASER_MASTER_START_ERROR));
-            errgen_laserState = MASTER_NOT_READY;
+                printf("11\n");
+                errgen_set(LASER_ERROR(LASER_MASTER_START_ERROR));
+                errgen_laserState = MASTER_NOT_STARTED;
+                gui_image_set("imgLaserGStatInfo", "gtk-no", 2);
+                gui_image_set("imgLaserDStatInfo", "gtk-yes", 2);
+                gui_label_set("labLaser1StatInfo", MASTER_NOT_STARTED_LABEL);
+                gui_label_set("labLaser2StatInfo", LASER_STATUS_OK_LABEL);
             }
             else if(err_l == LASER_SLAVE_START_ERROR){
-            errgen_set(LASER_ERROR(LASER_SLAVE_START_ERROR));
-            errgen_laserState = SLAVE_NOT_READY;
+                printf("12\n");
+                errgen_set(LASER_ERROR(LASER_SLAVE_START_ERROR));
+                errgen_laserState = SLAVE_NOT_STARTED;
+                gui_image_set("imgLaserGStatInfo", "gtk-yes", 2);
+                gui_image_set("imgLaserDStatInfo", "gtk-no", 2);
+                gui_label_set("labLaser1StatInfo", LASER_STATUS_OK_LABEL);
+                gui_label_set("labLaser2StatInfo", SLAVE_NOT_STARTED_LABEL);
             }
         }
+        if(!err_l){
+            printf("13\n");
+            gui_image_set("imgLaserDStatInfo", "gtk-yes", 2);
+            gui_image_set("imgLaserGStatInfo", "gtk-yes", 2);
+            gui_label_set("labLaser1StatInfo", LASER_STATUS_OK_LABEL);
+            gui_label_set("labLaser2StatInfo", LASER_STATUS_OK_LABEL);
+            errgen_laserState = 0;
+        }
+    }
+    //printf ("err_l = %x", err_l);
+
+    return 0;
+
+}
+
+void cantools_checkPlotState_laser(void)
+{
+    unsigned int err_l;
+    unsigned int laser_state;
+    unsigned long mes1, mes2;
+    struct laser_data d;
+    int i;
+
+    if ((errgen_laserState == ERR_LASER_FATAL) || ((errgen_laserState & MASTER_NOT_STARTED) && (errgen_laserState & SLAVE_NOT_STARTED))){
+        gui_image_set("imgLaserDStatInfo", "gtk-no", 2);
+        gui_image_set("imgLaserGStatInfo", "gtk-no", 2);
+        return;
     }
 
 
-    while (run_init) {
-        //check laser state
-        /*
-        if(laser_state = Laser_GetData(&ml, &sl, &d)){
-            if(laser_state == ERR_LASER_FATAL){
-            errgen_set(ERR_LASER_FATAL);
-            //todo arrêter les moteurs
+    if(laser_state = Laser_GetData(&ml, &sl, &d)){
+        if((laser_state & ERR_LASER_FATAL) == ERR_LASER_FATAL){
+            errgen_set(LASER_ERROR(ERR_LASER_FATAL));
+            gui_image_set("imgLaserDStatInfo", "gtk-no", 2);
+            gui_image_set("imgLaserGStatInfo", "gtk-no", 2);
+            errgen_laserState |= ERR_LASER_FATAL;
+            //arrêt des moteurs
+            for (i=0; i<SLAVE_NUMBER; i++) {
+                motor_start(slave_get_id_with_index(i),0);
+            }
             return;
-            }
-            if(laser_state & MASTER_FAILED_TIMEOUT){
+            //todo arrêter les moteurs
+        }
+        if(laser_state & MASTER_FAILED_TIMEOUT){
             gui_label_set("labLaser1StatInfo", MASTER_FAILED_TIMEOUT_LABEL);
+            gui_image_set("imgLaserGStatInfo", "gtk-no", 2);
+            errgen_laserState |= MASTER_FAILED_TIMEOUT;
             }
-            else if(laser_state & SLAVE_FAILED_TIMEOUT){
+        else if(laser_state & SLAVE_FAILED_TIMEOUT){
             gui_label_set("labLaser2StatInfo", MASTER_FAILED_TIMEOUT_LABEL);
-            }
-            else if(laser_state & MASTER_FAILED_DATCONSISTENCY){
+            gui_image_set("imgLaserDStatInfo", "gtk-no", 2);
+            errgen_laserState |= SLAVE_FAILED_TIMEOUT;
+        }
+        else if(laser_state & MASTER_FAILED_DATCONSISTENCY){
             gui_label_set("labLaser1StatInfo", MASTER_FAILED_DATCONSISTENCY_LABEL);
-            }
-            else if(laser_state & SLAVE_FAILED_DATCONSISTENCY){
+            gui_image_set("imgLaserGStatInfo", "gtk-no", 2);
+            errgen_laserState |= MASTER_FAILED_DATCONSISTENCY;
+        }
+        else if(laser_state & SLAVE_FAILED_DATCONSISTENCY){
             gui_label_set("labLaser2StatInfo", SLAVE_FAILED_DATCONSISTENCY_LABEL);
-            }
-            if(laser_state & MASTER_NOT_READY){
-            errgen_set(LASER_ERROR(MASTER_NOT_READY));
-            gui_label_set("labLaser1StatInfo", MASTER_NOT_READY_LABEL);
-            }
-            else if (laser_state & SLAVE_NOT_READY){
-            errgen_set(LASER_ERROR(SLAVE_NOT_READY));
-            gui_label_set("labLaser2StatInfo", SLAVE_NOT_READY_LABEL);
+            gui_image_set("imgLaserDStatInfo", "gtk-no", 2);
+            errgen_laserState |= SLAVE_FAILED_DATCONSISTENCY;
+        }
+        if(laser_state & MASTER_NOT_STARTED){
+            if(!(errgen_laserState & MASTER_NOT_STARTED)){
+                errgen_set(LASER_ERROR(MASTER_NOT_STARTED));
+                gui_label_set("labLaser1StatInfo", MASTER_NOT_STARTED_LABEL);
+                gui_image_set("imgLaserGStatInfo", "gtk-no", 2);
+                errgen_laserState |= MASTER_NOT_STARTED;
             }
         }
-        else{
+        else if (laser_state & SLAVE_NOT_STARTED){
+            if(!(errgen_laserState & SLAVE_NOT_STARTED)){
+                errgen_set(LASER_ERROR(SLAVE_NOT_STARTED));
+                gui_label_set("labLaser2StatInfo", SLAVE_NOT_STARTED_LABEL);
+                gui_image_set("imgLaserDStatInfo", "gtk-no", 2);
+                errgen_laserState |= SLAVE_NOT_STARTED;
+            }
+        }
+    }
+    else{
         gui_label_set("labLaser1StatInfo", LASER_STATUS_OK_LABEL);
         gui_label_set("labLaser2StatInfo", LASER_STATUS_OK_LABEL);
-        }
-        */
-        //todo affichage mesure
+        gui_image_set("imgLaserDStatInfo", "gtk-yes", 2);
+        gui_image_set("imgLaserGStatInfo", "gtk-yes", 2);
+        errgen_laserState = 0;
+    }
 
-        //motors
+    //printf("laser_state checkplotstate= %x, laser_errgen_laserState = %x\n", laser_state, errgen_laserState);
+
+//affichage mesures non vérifiées
+    Laser_GetUnverifiedData(&sl, &mes1);
+    gui_label_set("labMesureLaser2", strtools_gnum2str((UNS32*)&mes1, 0x50));
+
+    Laser_GetUnverifiedData(&ml, &mes2);
+    gui_label_set("labMesureLaser1", strtools_gnum2str((UNS32*)&mes2, 0x50));
+
+    /**Decommenter pour affichage uniquement si la valeur est correcte**/
+/*
+    if(!((laser_state & SLAVE_FAILED_TIMEOUT) || (laser_state & SLAVE_FAILED_DATCONSISTENCY) || (laser_state & SLAVE_NOT_STARTED))){
+        Laser_GetUnverifiedData(&sl, &mes1);
+        gui_label_set("labMesureLaser2", strtools_gnum2str((UNS32*)&mes1, 0x50));
+    }
+    else gui_label_set("labMesureLaser2", "NA");
+
+    if(!((laser_state & MASTER_FAILED_TIMEOUT) || (laser_state & MASTER_FAILED_DATCONSISTENCY) || (laser_state & MASTER_NOT_STARTED))){
+        Laser_GetUnverifiedData(&ml, &mes2);
+        gui_label_set("labMesureLaser1", strtools_gnum2str((UNS32*)&mes2, 0x50));
+    }
+    else gui_label_set("labMesureLaser1", "NA");
+*/
+    //Affichage mesure vérifiée
+    gui_label_set("labMesureLaserGlobal", strtools_gnum2str((UNS32*)&(d.mes), 0x50));
+
+}
+
+void cantools_exit_laser(void)
+{
+    printf("cantools exit laser: errgen_laserState = %x\n", errgen_laserState);
+
+    if(!(errgen_laserState & MASTER_NOT_STARTED)){
+        printf("In exit ml\n");
+        if (Laser_Exit1Laser( &ml )<0)
+            errgen_set(LASER_ERROR(LASER_MASTER_EXIT_ERROR));
+    }
+    if(!(errgen_laserState & SLAVE_NOT_STARTED)){
+        printf("In exit sl\n");
+        if (Laser_Exit1Laser( &sl )<0)
+            errgen_set(LASER_ERROR(LASER_SLAVE_EXIT_ERROR));
+    }
+    if(errgen_laserState == ERR_LASER_INIT_FATAL)
+        return;
+
+    gui_label_set("labLaser1StatInfo", MASTER_NOT_STARTED_LABEL);
+    gui_label_set("labLaser2StatInfo", SLAVE_NOT_STARTED_LABEL);
+    gui_image_set("imgLaserDStatInfo", "gtk-no", 2);
+    gui_image_set("imgLaserGStatInfo", "gtk-no", 2);
+    errgen_laserState = MASTER_NOT_STARTED | SLAVE_NOT_STARTED;
+}
+
+int cantools_reinit_laser(void){
+    int res;
+    gtksig_in_reinit_laser = 1;
+    if(errgen_laserState){
+        cantools_exit_laser();
+        if(cantools_init_laser())
+            return 1;
+
+        if(Laser_GetPositionOffset(&ml, &sl)<0)
+            return 1;
+    }
+    gtksig_in_reinit_laser = 0;
+    return 0;
+}
+/**
+* INITIALISATION LOOP
+**/
+gpointer cantools_init_loop(gpointer inutile) {
+    int i,k=0;
+    INTEGER32 j = 0;
+
+    //Init Laser
+    if(cantools_init_laser()); //return;
+
+    while (run_init) {
+
+        //check laser state
+        if(!gtksig_in_reinit_laser) cantools_checkPlotState_laser();
+
+        //Affichage erreur position cables estimée
+        //gui_label_set("labEstimErrPosCabl", "NA");
+
+        /**MOTORS**/
         j++;
         k = 0;
         for (i=0; i<SLAVE_NUMBER;i++) {
@@ -400,6 +805,7 @@ GThreadFunc cantools_init_loop() {
                 masterSendNMTstateChange (&SpirallingMaster_Data, slave_get_node_with_index(i), NMT_Reset_Node);
             }
             // Configuration PreOp
+
             if (slave_get_state_with_index(i) == STATE_CONFIG) {
                 printf("\n\nSLAVE STATE : %s \n\n",slave_get_state_title(slave_get_state_with_index(i)));
                 if(slave_config(slave_get_id_with_index(i))) { //preop a controler
@@ -409,6 +815,7 @@ GThreadFunc cantools_init_loop() {
                     errgen_set(ERR_SLAVE_CONFIG);
                 }
             }
+
             // Passage en mode operational
             if (slave_get_state_with_index(i) == STATE_OP) {
                 masterSendNMTstateChange (&SpirallingMaster_Data, slave_get_node_with_index(i), NMT_Start_Node);
@@ -427,6 +834,6 @@ GThreadFunc cantools_init_loop() {
         keyword_maj();
         usleep(500000);
     }
-    return;
+    g_thread_exit(NULL);
 }
 

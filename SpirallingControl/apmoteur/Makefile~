@@ -38,11 +38,15 @@ TARGET = unix
 CAN_DRIVER = can_virtual
 TIMERS_DRIVER = timers_unix
 APMOTEUR = "SpirallingControl"
-FUNCVAR = slave.o master.o gtksig.o gui.o strtools.o cantools.o lsstools.o od_callback.o keyword.o motor.o errgen.o
+LASERCLOSE1 = "laser_0_stop"
+LASERCLOSE2 = "laser_1_stop"
+FUNCVAR = slave.o master.o gtksig.o gui.o strtools.o cantools.o lsstools.o od_callback.o keyword.o motor.o errgen.o laser/laser.o
 
-INCLUDES = -I../include -I../include/$(TARGET) -I../include/$(CAN_DRIVER) -I../include/$(TIMERS_DRIVER)
+INCLUDES = -I../include -I./laser -I../include/$(TARGET) -I../include/$(CAN_DRIVER) -I../include/$(TIMERS_DRIVER)
 
 MASTER_OBJS = SpirallingMaster.o SpirallingControl.o $(FUNCVAR)
+LASER_0_OBJ = ./laser/laser_0_stop.c
+LASER_1_OBJ = ./laser/laser_1_stop.c
 
 OBJS = $(MASTER_OBJS) ../src/libcanfestival.a ../drivers/$(TARGET)/libcanfestival_$(TARGET).a
 
@@ -56,6 +60,8 @@ Debug: $(APMOTEUR)
 $(APMOTEUR): $(OBJS)
 	$(LD) $(LDFLAGS) $(PROG_CFLAGS) ${PROGDEFINES} $(INCLUDES) -o $@ $(OBJS) $(EXE_CFLAGS)
 
+$(LASERCLOSE1): $(CC) $(LASER_0_OBJ) -o $@
+$(LASERCLOSE2): $(CC) $(LASER_1_OBJ) -o $@
 
 SpirallingMaster.c: SpirallingMaster.od
 	$(MAKE) -C /home/jalil/Documents/programmation/python/objedit/ gnosis
@@ -68,9 +74,12 @@ clean:
 	rm -f $(MASTER_OBJS)
 	rm -f $(APMOTEUR)
 	rm -f SpirallingMaster.c
+	rm *.o
 
 mrproper: clean
 	rm -f SpirallingMaster.c
+	rm *.o
+	rm laser/*.o
 
 install: Apmoteur
 	mkdir -p $(DESTDIR)$(PREFIX)/bin/

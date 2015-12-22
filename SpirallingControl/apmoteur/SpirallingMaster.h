@@ -24,5 +24,23 @@ extern UNS16 Voltage_Vaux;		/* Mapped at index 0x2008, subindex 0x00*/
 extern UNS16 ErrorCode_Vaux;		/* Mapped at index 0x2009, subindex 0x00*/
 extern INTEGER32 Velocity_Vaux;		/* Mapped at index 0x200A, subindex 0x00*/
 extern INTEGER32 Vel2Send_Vaux;		/* Mapped at index 0x200B, subindex 0x00*/
+extern UNS16 StatusWord_MotRot;		/* Mapped at index 0x200C, subindex 0x00*/
+extern INTEGER8 InternalTemp_MotRot;		/* Mapped at index 0x200D, subindex 0x00*/
+extern UNS16 Voltage_MotRot;		/* Mapped at index 0x200E, subindex 0x00*/
+extern UNS16 ErrorCode_MotRot;		/* Mapped at index 0x200F, subindex 0x00*/
+extern INTEGER32 ConsigneVitesse_MotRot;		/* Mapped at index 0x2010, subindex 0x00*/
+extern INTEGER32 CaptureVitesse_MotRot;		/* Mapped at index 0x2011, subindex 0x00*/
+extern INTEGER32 CapturePosition_MotRot;		/* Mapped at index 0x2012, subindex 0x00*/
+extern UNS16 StatusWord_MotRotAux;		/* Mapped at index 0x2013, subindex 0x00*/
+extern INTEGER8 InternalTemp_MotRotAux;		/* Mapped at index 0x2014, subindex 0x00*/
+extern UNS16 Voltage_MotRotAux;		/* Mapped at index 0x2015, subindex 0x00*/
+extern UNS16 ErrorCode_MotRotAux;		/* Mapped at index 0x2016, subindex 0x00*/
+extern INTEGER32 ConsigneVitesse_MotRotAux;		/* Mapped at index 0x2017, subindex 0x00*/
+extern INTEGER32 CaptureVitesse_MotRotAux;		/* Mapped at index 0x2018, subindex 0x00*/
+extern UNS32 ConsigneAcceleration_MotRot;		/* Mapped at index 0x2019, subindex 0x00*/
+extern UNS16 ControlWord_MotRot;		/* Mapped at index 0x201A, subindex 0x00*/
+extern UNS32 ConsigneDeceleration_MotRot;		/* Mapped at index 0x201B, subindex 0x00*/
+extern UNS32 Acceleration_V;		/* Mapped at index 0x201C, subindex 0x00*/
+extern UNS32 Deceleration_V;		/* Mapped at index 0x201D, subindex 0x00*/
 
 #endif // SPIRALLINGMASTER_H

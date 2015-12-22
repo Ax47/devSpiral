@@ -23,14 +23,23 @@ char* motor_r_fn = "motor_r_config.txt";
 **/
 int slave_config(char* slave_id) {
     UNS8 nodeID = slave_get_node_with_id(slave_id);
+    printf("slave_id = %s, heartbeat\n", slave_id);
     /** ACTIVATION HEARTBEAT PRODUCER **/
-    UNS16 heartbeat_prod = HB_PROD;
+
+    UNS16 heartbeat_prod = 0;//HB_PROD;
     SDOR hbprod = {0x1017,0x00,0x06};
     int error = 0, i=0;
     if(!cantools_write_sdo(nodeID,hbprod,&heartbeat_prod)) {
         errgen_set(ERR_SLAVE_CONFIG_HB);
         return 0;
     }
+    heartbeat_prod = HB_PROD;
+    if(!cantools_write_sdo(nodeID,hbprod,&heartbeat_prod)) {
+        errgen_set(ERR_SLAVE_CONFIG_HB);
+        return 0;
+    }
+
+    //printf("slave_id = %s, PDOT\n", slave_id);
     /** CONFIGURATION PDOT **/
     // StatusWord, Error Code
     if(!cantools_PDO_map_config(nodeID,0x1A00,0x60410010,0x603F0010,0)) {
@@ -42,30 +51,49 @@ int slave_config(char* slave_id) {
         errgen_set(ERR_SLAVE_CONFIG_PDOT2);
         return 0;
     }
-    // Velocity
-    if(!cantools_PDO_map_config(nodeID,0x1A02,0x606C0020,0)) {
-        errgen_set(ERR_SLAVE_CONFIG_PDOT3);
-        return 0;
-   }
+    // transmit Velocity+if motrot transmit vel+pos
+    if(!strcmp(slave_id, "rotation")){
+        if(!cantools_PDO_map_config(nodeID,0x1A02,0x606C0020,0x60640020,0)) {
+            errgen_set(ERR_SLAVE_CONFIG_PDOT3);
+            return 0;
+        }
+    } else {
+        if(!cantools_PDO_map_config(nodeID,0x1A02,0x606C0020,0)) {
+            errgen_set(ERR_SLAVE_CONFIG_PDOT3);
+            return 0;
+        }
+    }
+    //printf("slave_id = %s, PDOR\n", slave_id);
     /** CONFIGURATION PDOR **/
-    // Vitesse
+    // recv Vitesse
     if(!cantools_PDO_map_config(nodeID,0x1600,0x60FF0020,0)) {
         errgen_set(ERR_SLAVE_CONFIG_PDOR1);
         return 0;
     }
+    //printf("slave_id = %s, PDOs\n", slave_id);
     /** ACTIVATION DES PDOs **/
-    if (!cantools_PDO_trans(nodeID,0x1800,0xFF,0x05)) {
+/*
+    if (!cantools_PDO_recv(nodeID,0x1400,0xFF,0x0A)) {
         errgen_set(ERR_SLAVE_CONFIG_ACTIVE_PDO);
         return 0;
     }
-    if (!cantools_PDO_trans(nodeID,0x1801,0xFF,0x05)) {
+*/
+    //transmit StatusWord, ErrorCode
+    if (!cantools_PDO_trans(nodeID,0x1800,0xFF,0,0,0)) {
         errgen_set(ERR_SLAVE_CONFIG_ACTIVE_PDO);
         return 0;
     }
-    if (!cantools_PDO_trans(nodeID,0x1802,0xFF,0x00)) {
+    //transmist Voltage, Temp, Polarity
+    if (!cantools_PDO_trans(nodeID,0x1801,0xFF,5000,0,0)) {
         errgen_set(ERR_SLAVE_CONFIG_ACTIVE_PDO);
         return 0;
     }
+    //transmit velocity
+    if (!cantools_PDO_trans(nodeID,0x1802,0xFF,1000,0,0)) {
+        errgen_set(ERR_SLAVE_CONFIG_ACTIVE_PDO);
+        return 0;
+    }
+    //printf("slave_id = %s, FULL CURRENT\n", slave_id);
     /** FULL CURRENT **/
     SDOR curAdd = {0x2204,0x00,0x05};
     UNS8 cur = 0x64;
@@ -73,7 +101,17 @@ int slave_config(char* slave_id) {
         errgen_set(ERR_SLAVE_CONFIG_CURRENT);
         return 0;
     }
+    /** MAXIMUM SLIPPAGE **/
+    SDOR slipAdd = {0x60F8, 0x00, int32};
+    INTEGER32 slippage = 512;
+    if (!cantools_write_sdo(nodeID,slipAdd,&slippage)) {
+        errgen_set(ERR_SLAVE_CONFIG_CURRENT);
+        return 0;
+    }
+
+    //printf("slave_id = %s, FILE CONF\n", slave_id);
     /** FILE CONFIG **/
+    //set motor profile
     FILE* motor_fn = NULL;
     SDOR profAdd = {0x6060,0x00,0x02};
     UNS8 prof=0;
@@ -91,10 +129,11 @@ int slave_config(char* slave_id) {
         errgen_set(ERR_SLAVE_CONFIG_PROFILE);
         return 0;
     }
+    //
     if (motor_fn != NULL) {
         char title[20];
         int data;
-        while(fscanf(motor_fn, "%s %d",&title,&data) == 2) {
+        while(fscanf(motor_fn, "%s %d",(char*)&title,&data) == 2) {
             if (strcmp(title,"Max_Velocity") == 0) {
                 SDOR mvelAdd = {0x6081,0x00,0x07};
                 UNS32 mvel = (UNS32)data;
@@ -336,14 +375,14 @@ int slave_check_config_file(char* slave_id) {
             char title[20];
             int data;
             int i = 0;
-            while(fscanf(f, "%s %d",&title,&data) == 2) {
+            while(fscanf(f, "%s %d",(char*)&title,&data) == 2) {
                 if (strcmp(title,"Acceleration") == 0) i++;
                 if (strcmp(title,"Deceleration") == 0) i++;
                 if (strcmp(title,"QS_Deceleration") == 0) i++;
                 if (strcmp(title,"Velocity_Inc") == 0) i++;
             }
             fclose(f);
-            if (i == 4) return 1;
+            if (i > 0) return 1;
             else return 0;
         } else return 0;
     } else if (slave_id == "couple") {
@@ -352,7 +391,7 @@ int slave_check_config_file(char* slave_id) {
             char title[20];
             int data;
             int i = 0;
-            while(fscanf(f, "%s %d",&title,&data) == 2) {
+            while(fscanf(f, "%s %d",(char*)&title,&data) == 2) {
                 if (strcmp(title,"Torque") == 0) i++;
                 if (strcmp(title,"Torque_Slope") == 0) i++;
             }
@@ -366,7 +405,7 @@ int slave_check_config_file(char* slave_id) {
             char title[20];
             int data;
             int i = 0;
-            while(fscanf(f, "%s %d",&title,&data) == 2) {
+            while(fscanf(f, "%s %d",(char*)&title,&data) == 2) {
                 if (strcmp(title,"Acceleration") == 0) i++;
                 if (strcmp(title,"Deceleration") == 0) i++;
                 if (strcmp(title,"QS_Deceleration") == 0) i++;
@@ -518,7 +557,7 @@ void slave_set_state_error_with_index (int i, int dat) {
     }
 }
 /**
-* Affectation du state_error en fonction de l'index
+* Affectation du state_error en fonction de l'id
 **/
 void slave_set_state_error_with_id (char* slave_id, int dat) {
     int i = slave_get_index_with_id(slave_id);

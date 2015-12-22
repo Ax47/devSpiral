@@ -11,6 +11,10 @@
 #include "master.h"
 #include "canfestival.h"
 #include "cantools.h"
+#include "errgen.h"
+
+#include "laser_asserv.h"
+#include "laser_simulation.h"
 
 int motor_switch_step = 0;
 const int motor_switch_step_max = 10;
@@ -124,6 +128,7 @@ int motor_switch_on(char* slave_id) {
             return 0;
         } else {
             if (strState == SOND) {
+                //printf("state 6\n");
                 UNS16 word = 0x0006;
                 if(!cantools_write_sdo(slave_get_node_with_id(slave_id),c_word,&word)) {
                     motor_switch_step++;
@@ -131,6 +136,7 @@ int motor_switch_on(char* slave_id) {
                 motor_switch_on(slave_id);
             }
             if (strState == R2SON) {
+                //printf("state 7\n");
                 UNS16 word = 0x0007;
                 if(!cantools_write_sdo(slave_get_node_with_id(slave_id),c_word,&word)) {
                     motor_switch_step++;
@@ -138,11 +144,13 @@ int motor_switch_on(char* slave_id) {
                 motor_switch_on(slave_id);
             }
             if (strState == SON) {
+                //printf("state OK\n");
                 motor_switch_step = 0;
                 return 1;
             }
         }
     } else {
+        //printf("state ERR\n");
         motor_switch_step = 0;
         return 0;
     }
@@ -167,7 +175,7 @@ int motor_switch_off(char* slave_id) {
                 return 1;
             } else {
                 motor_switch_step++;
-                motor_switch_off(slave_get_node_with_id(slave_id));
+                motor_switch_off(slave_id);
             }
         } else {
             motor_switch_step = 0;
@@ -267,3 +275,67 @@ int motor_check_torque_slope(INTEGER32 torqueSlope) {
     else return 0;
 }
 
+void motor_set_MotRot_Accel(void)
+{
+    if(!slave_id_exist("rotation"))
+        return;
+
+    UNS32 accel_T, decel_T;
+    UNS32 accel_R, decel_R;
+    SDOR Accel = {0x6083, 0x00, 0x07};
+    SDOR Decel = {0x6084, 0x00, 0x07};
+    if(slave_id_exist("vitesse"))
+    {
+        //lecture des accelerations
+        if (!cantools_read_sdo(slave_get_node_with_id("vitesse"),Accel,&accel_T)) {
+            errgen_set(ERR_ROT_GET_ACCEL);
+            return;
+        }
+        if (!cantools_read_sdo(slave_get_node_with_id("vitesse"),Decel,&decel_T)) {
+            errgen_set(ERR_ROT_GET_DECEL);
+            return;
+        }
+        Acceleration_V = accel_T;
+        Deceleration_V = decel_T;
+    }
+    else {
+        accel_T = 64000;
+        decel_T = 64000;
+        Acceleration_V = accel_T;
+        Deceleration_V = decel_T;
+    }
+    //calcul des acceleration rotation correspondante
+    if(!laser_simu){
+        if(laser_asserv_CalcRotAccel(&ml, &sl, &accel_T, &accel_R)){
+            errgen_set(ERR_ROT_CALC_ACCEL);
+            return;
+        }
+        if(laser_asserv_CalcRotAccel(&ml, &sl, &decel_T, &decel_R)){
+            errgen_set(ERR_ROT_CALC_ACCEL);
+            return;
+        }
+    } else {
+        if(laser_asserv_CalcRotAccel(&lsim, NULL, &accel_T, &accel_R)){
+            errgen_set(ERR_ROT_CALC_ACCEL);
+            return;
+        }
+        if(laser_asserv_CalcRotAccel(&lsim, NULL, &decel_T, &decel_R)){
+            errgen_set(ERR_ROT_CALC_ACCEL);
+            return;
+        }
+
+    }
+    //ecriture des accelerations
+    if (!cantools_write_sdo(slave_get_node_with_id("rotation"), Accel, &accel_R)){
+        errgen_set(ERR_ROT_WRITE_ACCEL);
+        return;
+    }
+    if (!cantools_write_sdo(slave_get_node_with_id("rotation"), Decel, &decel_R)){
+        errgen_set(ERR_ROT_WRITE_ACCEL);
+        return;
+    }
+    ConsigneAcceleration_MotRot = accel_R;
+    ConsigneDeceleration_MotRot = decel_R;
+    //printf("A1 = %u, A2 = %u, D1 = %u, D2 = %u\n", accel_T, decel_T, accel_R, decel_R);
+
+}

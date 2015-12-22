@@ -20,16 +20,24 @@
 #include "strtools.h"
 #include "errgen.h"
 
+#include "laser_asserv.h"
+
+
 //lasers
-laser ml, sl;
+laser ml, sl, lsim;
+//definition de l'hélice
+struct Helix_User_Data HelixUserData;
+
 
 // Plateforme MASTER
 s_BOARD MasterBoard = {"0", "1M"};
 
 // Définition des esclaves
 volatile SLAVES_conf slaves[SLAVE_NUMBER] = {
-        {"vitesse",0x02,0x0800005A,0x00018E70,0x00000710,0x138F04FC,0,0,0x0000},
-        {"vitesse_aux",0x03,0x0800005A,0x00018E70,0x00000710,0x138F04FD,0,0,0x0000}
+        //{"vitesse",0x02,0x0800005A,0x00018E70,0x00000710,282150321,0,0,0x0000},
+       // {"vitesse_aux",0x03,0x0800005A,0x00018E70,0x00000710,282150324/*0x138F04FD*/,0,0,0x0000}//,
+        //{"rotation",0x04,0x0800005A,0x00018E70,0x00000710,328140027,0,0,0x0000}//,
+        //{"rotation",0x04,0x0800005A,0x00018E70,0x00000710,0x10d145b4,0,0,0x0000}//,
 };
 pthread_mutex_t lock_slave = PTHREAD_MUTEX_INITIALIZER; // Mutex de slaves
 
@@ -50,34 +58,20 @@ void catch_signal(int sig) {
 void Exit() {
     unsigned int err_l;
     int i = 0;
+    run_init = 0;
 
-    //fermeture laser
-    printf("errgen_laserState = %x\n", errgen_laserState);
-    if(errgen_laserState == ERR_LASER_INIT_FATAL)
-        goto exit_moteur;
-    else{
-        if(!(errgen_laserState & MASTER_NOT_READY)){
-            printf("In exit ml\n");
-            if (Laser_Exit1Laser( &ml )<0)
-                errgen_set(LASER_MASTER_EXIT_ERROR);
-        }
-        else if(!(errgen_laserState & SLAVE_NOT_READY)){
-            printf("In exit sl\n");
-            if (Laser_Exit1Laser( &sl )<0)
-                errgen_set(LASER_SLAVE_EXIT_ERROR);
-        }
-        else{
-            if((err_l = Laser_Exit2Laser(&ml, &sl)) & LASER_MASTER_EXIT_ERROR)
-                            errgen_set(LASER_MASTER_EXIT_ERROR);
-            if(err_l & LASER_SLAVE_EXIT_ERROR)
-                            errgen_set(LASER_SLAVE_EXIT_ERROR);
-
+    //exit asserv
+    if(run_asserv){
+        printf("EXIT ASSERV\n");
+        if(laser_asserv_stop()){
+            errgen_set(ERR_LASER_ASSERV_STOP);
         }
     }
 
-    exit_moteur:
+    //fermeture laser
+    cantools_exit_laser();
 
-    run_init = 0;
+    //fermeture moteurs
     for (i=0; i<SLAVE_NUMBER; i++) {
         motor_start(slave_get_id_with_index(i),0);
         motor_switch_off(slave_get_id_with_index(i));
@@ -93,6 +87,7 @@ int main(int argc,char **argv) {
     // Initialisation de l'interface graphique
     gchar* thgui = "gui";
     GError * guierr;
+    XInitThreads();
     GThread * guithread = g_thread_try_new (thgui, gui_init,NULL, &guierr);
     if (guierr == NULL)
         errgen_set(ERR_GUI_LOOP_RUN);
@@ -124,10 +119,24 @@ int main(int argc,char **argv) {
         }
     }
     if(!slave_check_config_file("rotation")) {
-        if(!slave_gen_config_file("vitesse","Acceleration 1000000","Deceleration 1000000","QS_Deceleration 1000000",NULL)) {
+        if(!slave_gen_config_file("rotation","Acceleration 1000000","Deceleration 1000000","QS_Deceleration 1000000",NULL)) {
             errgen_set(ERR_FILE_CONFIG_GEN);
         }
     }
+
+ //DEFINITION DE LA CONSIGNE HELICE UTILISATEUR
+
+    //a faire : interface
+  unsigned long d[1];
+  long int p[1];
+  d[0] = 30000;
+  p[0] = 4000;
+
+  HelixUserData.dmax = d[0];
+  HelixUserData.NbrOfEntries = 1;
+  HelixUserData.d = d;
+  HelixUserData.p = p;
+
 // Handler pour arret manuel
 	signal(SIGTERM, catch_signal);
 	signal(SIGINT, catch_signal);
@@ -170,7 +179,7 @@ int main(int argc,char **argv) {
             errgen_set(ERR_INIT_LOOP_RUN);
 
         g_thread_join (initthread);
-        }
+    }
 
     g_thread_join (guithread);
 

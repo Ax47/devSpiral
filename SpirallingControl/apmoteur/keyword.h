@@ -149,8 +149,14 @@ void keyword_maj();
 #define SLAVE_FAILED_TIMEOUT_LABEL "ERREUR TIMEOUT"
 #define MASTER_FAILED_DATCONSISTENCY_LABEL "INCOHERENCE DES DONNEES"
 #define SLAVE_FAILED_DATCONSISTENCY_LABEL "INCOHERENCE DES DONNEES"
-#define MASTER_NOT_READY_LABEL "PAS CONNECTE"
-#define SLAVE_NOT_READY_LABEL "PAS CONNECTE"
+#define MASTER_NOT_STARTED_LABEL "PAS CONNECTE"
+#define SLAVE_NOT_STARTED_LABEL "PAS CONNECTE"
+
+//ROTATION LABEL
+
+#define LAB_R_TITLE "control rotation"
+#define LAB_R_START "rotation:"
+#define LAB_LASER_SIMU "simulation laser:"
 
 // Motor powor state
 #define NR2SON 0x01
@@ -222,7 +228,7 @@ void keyword_maj();
 #define MOTOR_ERROR_IDLE_TXT "Erreur Idle"
 
 // CONSTANTS
-#define MAX_SDO_ERROR 2
+#define MAX_SDO_ERROR 50
 #define SDO_TIMEOUT 3
 
 // ERROR TITLE
@@ -240,6 +246,7 @@ void keyword_maj();
 #define ERR_MASTER_CONFIG_PDOR2_TITLE "PDOR2 MASTER"
 #define ERR_MASTER_CONFIG_PDOR3_TITLE "PDOR3 MASTER"
 #define ERR_MASTER_CONFIG_PDOT1_TITLE "PDOT1 MASTER"
+#define ERR_MASTER_CONFIG_PDOT2_TITLE "PDOT2 MASTER"
 #define ERR_MASTER_CONFIG_TITLE  "Configuration MASTER"
 #define ERR_LSS_CONFIG_TITLE  "Configuration LSS"
 #define ERR_SLAVE_CONFIG_TITLE  "Configuration SLAVE"
@@ -260,6 +267,7 @@ void keyword_maj();
 #define ERR_SLAVE_CONFIG_TORQUE_MAX_VELOCITY_TITLE "Vitesse max"
 #define ERR_SLAVE_CONFIG_MOTOR_SON_TITLE "Démarrage moteur"
 #define ERR_SLAVE_SAVE_CONFIG_TITLE "Sauvegarde de la configuration"
+#define ERR_SLAVE_CONFIG_ROT_REFPOS_TITLE "Position de Reference moteur rotation"
 #define ERR_MOTOR_PAUSE_TITLE "Mise en pause du moteur"
 #define ERR_MOTOR_RUN_TITLE "Mise en mouvement du moteur"
 #define ERR_MOTOR_OFF_TITLE "Extinction du moteur"
@@ -288,13 +296,20 @@ void keyword_maj();
 #define ERR_LASER_MASTER_INIT2_TITLE "Laser 1 Initialisation"
 #define ERR_LASER_SLAVE_INIT_TITLE "Laser 2 Initialisation"
 #define ERR_LASER_SLAVE_INIT2_TITLE "Laser 2 Initialisation"
-#define ERR_MASTER_NOT_READY_TITLE "Laser 1 fonctionnement"
-#define ERR_SLAVE_NOT_READY_TITLE "Laser 2 fonctionnement"
+#define ERR_MASTER_NOT_STARTED_TITLE "Laser 1 fonctionnement"
+#define ERR_SLAVE_NOT_STARTED_TITLE "Laser 2 fonctionnement"
 #define ERR_LASER_MASTER_START_ERROR_TITLE "laser 1 start"
 #define ERR_LASER_SLAVE_START_ERROR_TITLE "laser 2 start"
 #define ERR_LASER_GETPOSOFFSET_ERROR_TITLE "Delta laser 1 laser 2"
 #define ERR_LASER_MASTER_EXIT_TITLE "Laser 1 exit"
 #define ERR_LASER_SLAVE_EXIT_TITLE "Laser 2 exit"
+#define ERR_LASER_REINIT_TITLE "Laser Reinit"
+#define ERR_LASER_SERIAL_CONFIG_TITLE "Serial configuration"
+
+
+#define ERR_LASER_ASSERV_TITLE "Asservissement rotation"
+#define ERR_LASER_SIMU_TITLE "Erreur simulation laser"
+#define ERR_ROT_TITLE "Erreur moteur rotation"
 
 // ERROR CONTENT
 #define ERR_DRIVER_UP_CONTENT "Le chargement du driver SOCKET CAN a échoué"
@@ -311,6 +326,7 @@ void keyword_maj();
 #define ERR_MASTER_CONFIG_PDOR2_CONTENT "La configuration de la PDO2 récepteur du maitre a échoué"
 #define ERR_MASTER_CONFIG_PDOR3_CONTENT "La configuration de la PDO3 récepteur du maitre a échoué"
 #define ERR_MASTER_CONFIG_PDOT1_CONTENT "La configuration de la PDO1 transmetteur du maitre a échoué"
+#define ERR_MASTER_CONFIG_PDOT2_CONTENT "La configuration de la PDO2 transmetteur du maitre a échoué"
 #define ERR_MASTER_CONFIG_CONTENT "La configuration du maitre a échoué"
 #define ERR_LSS_CONFIG_CONTENT "La configuration LSS a échoué"
 #define ERR_SLAVE_CONFIG_CONTENT "La configuration d'un esclave a échoué"
@@ -330,6 +346,7 @@ void keyword_maj();
 #define ERR_SLAVE_CONFIG_TORQUE_SLOPE_CONTENT "L'affectation de la pente de montée en couple pour un esclave a échoué"
 #define ERR_SLAVE_CONFIG_TORQUE_MAX_VELOCITY_CONTENT "L'affectation de vitesse max en mode couple pour un esclave a échoué"
 #define ERR_SLAVE_CONFIG_MOTOR_SON_CONTENT "La mise en marche d'un esclave a échoué"
+#define ERR_SLAVE_CONFIG_ROT_REFPOS_CONTENT "La SDO de lecture de position de reference a echouée moteur rotation"
 #define ERR_SLAVE_SAVE_CONFIG_CONTENT "La sauvegarde des paramètres de configuration a échoué pour un des esclaves"
 #define ERR_MOTOR_PAUSE_CONTENT "La mise en pause d'un 'des moteurs a échoué"
 #define ERR_MOTOR_RUN_CONTENT "La mise en mouvement d'un des moteurs a échoué"
@@ -354,8 +371,8 @@ void keyword_maj();
 #define ERR_LOAD_TORQUE_SLOPE_CONTENT "La lecture de la pente de couple d'un des moteurs a échoué"
 //laser
 #define ERR_LASER_FATAL_CONTENT "Aucuns des lasers ne fournit plus de mesure viable"
-#define ERR_MASTER_NOT_READY_CONTENT "Laser 1 Erreur Fatale. Laser desactivé"
-#define ERR_SLAVE_NOT_READY_CONTENT "Laser 2 Erreur Fatale. Laser desactivé"
+#define ERR_MASTER_NOT_STARTED_CONTENT "Laser 1 Erreur Fatale. Laser pas démarré"
+#define ERR_SLAVE_NOT_STARTED_CONTENT "Laser 2 Erreur Fatale. Laser pas démarré"
 #define ERR_LASER_INIT_FATAL_CONTENT "Aucuns des lasers n'a pu être initialisé correctement"
 #define ERR_LASER_MASTER_INIT_CONTENT "Le laser 1 n'a pas pu être initialisé correctement"
 #define ERR_LASER_MASTER_INIT2_CONTENT "Le laser 1 n'est pas branché correctement"
@@ -366,5 +383,17 @@ void keyword_maj();
 #define ERR_LASER_GETPOSOFFSET_ERROR_CONTENT "Le delta entre les mesures laser n'a pas pu être obtenu"
 #define ERR_LASER_MASTER_EXIT_CONTENT "Erreur lors de la fermeture laser 1. Lors du redémarrage débrancher puis rebrancher le laser"
 #define ERR_LASER_SLAVE_EXIT_CONTENT "Erreur lors de la fermeture laser 2. Lors du redémarrage débrancher puis rebrancher le laser"
+#define ERR_LASER_REINIT_CONTENT "La reinitialisation des laser a échoué. Verifier les branchements: alim et usb"
+#define ERR_LASER_SERIAL_CONFIG_CONTENT "Serial acces permission problem. Try running the code with sudo"
+
+
+#define ERR_LASER_ASSERV_START_CONTENT "Erreur au démarrage de l'asservissement"
+#define ERR_LASER_ASSERV_STOP_CONTENT "Erreur à l'arrêt de l'asservissement"
+#define ERR_LASER_SIMU_START_CONTENT "le démarrage de la simulation laser a échoué"
+#define ERR_LASER_SIMU_STOP_CONTENT "l'arrêt de la simulation laser a échoué"
+#define ERR_ROT_CALC_ACCEL_CONTENT "L'acceleration de consigne du moteur rotation n'a pas été calculé correctement"
+#define ERR_ROT_WRITE_ACCEL_CONTENT "L'acceleration de consigne du moteur rotation n'a pas été transmise au moteur"
+#define ERR_ROT_GET_ACCEL_CONTENT "L'accéleration du moteur rotation n'a pas pu être obtenue"
+#define ERR_ROT_GET_DECEL_CONTENT "La déceleration du moteur rotation n'a pas pu être obtenue"
 
 #endif // _SIGNAUX_H

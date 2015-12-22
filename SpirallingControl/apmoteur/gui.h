@@ -15,7 +15,7 @@ gint64 gui_str2num(gchar *txtdata); // Convertit str en double
 void gui_widget2show(char* s1,...); // Affiche les widget en arg
 void gui_widget2hide(char* s1,...);
 void gui_info_box(char* boxTitle, char* boxContent, char* icon);
-GThreadFunc gui_init();
+gpointer gui_init(gpointer arg);
 GObject* gui_get_object(gchar* labid); // Renvoie l'objet gtk
 GtkWindow* gui_get_window(gchar* labid);
 GtkWidget* gui_get_widget(gchar* labid);

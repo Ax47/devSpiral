@@ -67,6 +67,8 @@ static int master_start_sync(int start) {
 **/
 static int master_config() {
     UNS32 dat;
+    UNS16 Inhibit_Time;
+    UNS8 trans_type;
     int i = 0;
     /** SYNC PERIOD **/
     if(!master_start_sync(0)) { // Arret de la synchro
@@ -79,6 +81,7 @@ static int master_config() {
         return 0;
     }
     /** HEARTBEAT CONSUMER **/
+
     for (i=0; i < SLAVE_NUMBER; i++) {
         dat = HB_CONS_BASE + (slave_get_node_with_index(i)-1)*HB_CONS_BASE_OFFSET; // 500 + (n-1)*50
         if(!cantools_write_local(0x1016,slave_get_node_with_index(i)-1,&dat,sizeof(UNS32))) {
@@ -86,8 +89,10 @@ static int master_config() {
             return 0;
         }
     }
+
     /** PDOR CONFIGURATION **/
     UNS8 j;
+
     for (i=0; i < SLAVE_NUMBER; i++) {
         j = (slave_get_node_with_index(i) - 0x02)*3;
         dat = 0x40000180 + slave_get_node_with_index(i);
@@ -113,7 +118,12 @@ static int master_config() {
     for (i=0; i < SLAVE_NUMBER; i++) {
         j = (slave_get_node_with_index(i) - 0x02)*1;
         dat = 0x40000200 + slave_get_node_with_index(i);
+        trans_type = 0xFF;
         if (!cantools_write_local(0x1800+j,0x01,&dat,sizeof(UNS32))) {
+            errgen_set(ERR_MASTER_CONFIG_PDOT1);
+            return 0;
+        }
+        if (!cantools_write_local(0x1800+j,0x02,&trans_type,sizeof(UNS8))) {
             errgen_set(ERR_MASTER_CONFIG_PDOT1);
             return 0;
         }
@@ -122,6 +132,8 @@ static int master_config() {
     /** CALLBACKS **/
     RegisterSetODentryCallBack(&SpirallingMaster_Data, 0x2000, 0, &OnStatusWordVUpdate);
     RegisterSetODentryCallBack(&SpirallingMaster_Data, 0x2004, 0, &OnStatusWordVauxUpdate);
+    RegisterSetODentryCallBack(&SpirallingMaster_Data, 0x200C, 0, &OnStatusWordRUpdate);
+
     return 1;
 }
 
@@ -157,15 +169,12 @@ void SpirallingMaster_stopped(CO_Data* d) {
 	printf("SpirallingMaster_stopped\n");
 }
 
-static int MasterSyncCount = 0, MasterControl = 0;
+static unsigned long MasterSyncCount = 0;
+
 
 void SpirallingMaster_post_sync(CO_Data* d) {
-    MasterControl++;
-	//printf("SpirallingMaster_post_sync\n");
-//	printf("Status Word: %#.4x \n",StatusWord_C);
-//	printf("Internal Temp: %d \n",InternalTemp_C);
-//	printf("Voltage: %d \n",Voltage_C/10);
-//	printf("Error code: %#.4x \n",ErrorCode_C);
+
+    MasterSyncCount++;
 
 }
 
@@ -204,9 +213,18 @@ void SpirallingMaster_post_SlaveStateChange(CO_Data* d, UNS8 nodeId, e_nodeState
 }
 
 void SpirallingMaster_post_TPDO(CO_Data* d) {
-	printf("SpirallingMaster_post_TPDO MasterSyncCount = %d \n", MasterSyncCount);
-	printf("Mastersync : %d \n",MasterSyncCount);
-	MasterSyncCount++;
+/*
+	printf("\nSpirallingMaster_post_TPDO MasterSyncCount = %lu \n", MasterSyncCount);
+
+    printf("MotRotVars : StatusWord = %x, Erreur = %x, ConsigneVitesse = %d, CaptureVitesse = %d, CapturePosition = %d, Acceleration = %u, Deceleration = %u, Tension = %d, Temperature = %d\n",
+        StatusWord_MotRot, ErrorCode_MotRot, ConsigneVitesse_MotRot, CaptureVitesse_MotRot, CapturePosition_MotRot, ConsigneAcceleration_MotRot, ConsigneDeceleration_MotRot, Voltage_MotRot, InternalTemp_MotRot);
+
+    printf("MotTransVars : StatusWord = %x, Erreur = %x, ConsigneVitesse = %d, CaptureVitesse = %d, Acceleration = %u, Deceleration = %u,Tension = %d, Temperature = %d\n",
+        StatusWord_V, ErrorCode_V, Vel2Send_V, Velocity_V, Acceleration_V, Deceleration_V, Voltage_V, InternalTemp_V);
+
+    printf("MotTransAuxVars : StatusWord = %x, Erreur = %x, ConsigneVitesse = %d, CaptureVitesse = %d, Tension = %d, Temperature = %d\n",
+        StatusWord_Vaux, ErrorCode_Vaux, Vel2Send_Vaux, Velocity_Vaux, Voltage_MotRotAux, InternalTemp_Vaux);
+*/
 }
 
 void SpirallingMaster_post_SlaveBootup(CO_Data* d, UNS8 nodeid) {

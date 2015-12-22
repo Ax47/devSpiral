@@ -38,16 +38,16 @@ TARGET = unix
 CAN_DRIVER = can_virtual
 TIMERS_DRIVER = timers_unix
 APMOTEUR = "SpirallingControl"
-FUNCVAR = slave.o master.o gtksig.o gui.o strtools.o cantools.o lsstools.o od_callback.o keyword.o motor.o errgen.o laser/laser.o
+FUNCVAR = slave.o master.o gtksig.o gui.o strtools.o cantools.o lsstools.o od_callback.o keyword.o motor.o errgen.o laser/laser.o laser/laser_asserv.o laser/laser_simulation.o
 
-INCLUDES = -I../include -I./laser -I../include/$(TARGET) -I../include/$(CAN_DRIVER) -I../include/$(TIMERS_DRIVER)
+INCLUDES = -I. -I../include -I./laser -I../include/$(TARGET) -I../include/$(CAN_DRIVER) -I../include/$(TIMERS_DRIVER)
 
 MASTER_OBJS = SpirallingMaster.o SpirallingControl.o $(FUNCVAR)
 
 OBJS = $(MASTER_OBJS) ../src/libcanfestival.a ../drivers/$(TARGET)/libcanfestival_$(TARGET).a
 
 
-Debug: $(APMOTEUR)
+ALL: $(APMOTEUR)
 
 ../drivers/$(TARGET)/libcanfestival_$(TARGET).a:
 	$(MAKE) -C  ../drivers/$(TARGET) libcanfestival_$(TARGET).a
@@ -58,7 +58,7 @@ $(APMOTEUR): $(OBJS)
 
 
 SpirallingMaster.c: SpirallingMaster.od
-	$(MAKE) -C /home/jalil/Documents/programmation/python/objedit/ gnosis
+	$(MAKE) -C ../objedit/ gnosis
 	python ../objedit/objdictgen.py SpirallingMaster.od SpirallingMaster.c
 
 %.o: %.c
@@ -67,13 +67,15 @@ SpirallingMaster.c: SpirallingMaster.od
 clean:
 	rm -f $(MASTER_OBJS)
 	rm -f $(APMOTEUR)
-	rm -f SpirallingMaster.c
-	rm *.o
+	rm -f *.o
+	rm -f laser/*.o
 
 mrproper: clean
+	rm -f $(MASTER_OBJS)
+	rm -f $(APMOTEUR)
 	rm -f SpirallingMaster.c
-	rm *.o
-	rm laser/*.o
+	rm -f *.o
+	rm -f laser/*.o
 
 install: Apmoteur
 	mkdir -p $(DESTDIR)$(PREFIX)/bin/

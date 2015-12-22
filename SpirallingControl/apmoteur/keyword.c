@@ -25,8 +25,17 @@ void keyword_init () {
     gui_label_set("labMVelStatTitle", MOTOR_VEL);
     gui_label_set("labMCoupleStatTitle", MOTOR_COUPLE);
     gui_label_set("labMRotStatTitle", MOTOR_ROT);
+
+    //laser
     gui_label_set("labLaserGStatTitle", LASERG);
     gui_label_set("labLaserDStatTitle", LASERD);
+    gui_label_set("labMesureLaser1", "NA");
+    gui_label_set("labMesureLaser2", "NA");
+    gui_label_set("labMesureLaserGlobal", "NA");
+    gui_label_set("labEstimErrPosCabl", "NA");
+
+
+
     gui_label_set("labStateError", STATE_ERROR );
     gui_label_set("labPower", POWER_STATE);
     gui_label_set("labPowerError", POWER_STATE_ERROR);
@@ -60,6 +69,18 @@ void keyword_init () {
     gui_button_set("butVelDown",NULL,"gtk-remove");
 
     gtk_switch_set_active(gui_get_switch("butVelStart"),FALSE);
+
+/** BOX ROTATION **/
+    //label boutons
+    gui_label_set("labBoxRotTitle", LAB_R_TITLE);
+    gui_label_set("lab_Start_R", LAB_R_START);
+    gui_label_set("labLaserSimu", LAB_LASER_SIMU);
+
+    //laser_simu
+    gui_label_set("lab_sim_inc_vel_val", "NA");
+    gui_label_set("lab_sim_inc_pos_text", "Add Position error");
+    gui_label_set("lab_sim_inc_vel_text", "Add Velocity Error");
+
 
 /** BOX STATUT **/
     gui_label_set("labBoxStatTitle",ETAT);
@@ -106,6 +127,14 @@ static void keyword_maj_vitesse_aux() {
     gui_label_set("labMVelaux",strtools_gnum2str(&Velocity_Vaux,0x04));
 }
 static void keyword_maj_rotation(){
+    gui_label_set("labMRotPowerError",motor_get_error_title(ErrorCode_MotRot));
+    INTEGER16 data = Voltage_MotRot/10;
+    gui_label_set("labMRotVolt", strtools_gnum2str(&data,int16));
+    gui_label_set("labMRotTemp", strtools_gnum2str(&InternalTemp_MotRot, int8));
+    INTEGER32 v_err = laser_simulation_get_vel_err();
+    if (gtk_widget_is_visible(gui_get_widget("window_laser_sim"))){
+        gui_label_set("lab_sim_inc_vel_val", strtools_gnum2str(&v_err,int32));
+    }
 }
 static void keyword_maj_couple(){
 //    gui_label_set("labMCouplePowerError",motor_get_error_title(ErrorCode_C));

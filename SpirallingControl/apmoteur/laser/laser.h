@@ -1,6 +1,3 @@
-
-#define LASER_SIMULATION 0
-
 #include "struct_laser.h"
 
 #include "errgen_laser.h"
@@ -16,13 +13,16 @@
 
 #define TIME_VITESSE_CALC 1000000 //en micro sec. attente entre deux mesures de position
 #define TIME_ERROR_VAL_VITESSE 50//micro sec: temps de récup des données
+/*****************configuration des droits d'accès aux ports*****************************************/
 
-//*****************cas ou utilisateur a besoin de lancer un laser séparément**************************//
+int Laser_serial_config(void);
+
+/*****************cas ou utilisateur a besoin de lancer un laser séparément**************************/
 
 //FONCTION D'INIT LASER
 //func return -1 failure, 0 success
 
-int Laser_Init(laser * l, const char * portName);//portName = /dev/ttyUSB0, /dev/ttyUSB1
+int Laser_Init(laser * l);
 int Laser_Recv_Start(laser * l);
 int Laser_wait_until_ready(laser * l);
 
@@ -38,26 +38,31 @@ int Laser_Close(laser * l);
 //posOffset
 int Laser_GetPositionOffset(laser * master, laser * slave);//appellée par Laser_Start2Laser(prend la diff master.mes-slave.mes)
 
-//*****************cas ou utilisateur souhaite definir direct 2 laser********************************//
+//mesures
+//retourne 0 si ok 1 si l pas près
+unsigned int Laser_GetUnverifiedData(laser * l, unsigned long * mesl);
+
+/*****************cas ou utilisateur souhaite definir direct 2 laser********************************/
 
 //FONCTION D'INIT LASER
 //resultats retournes (voir define ci-dessus)
 unsigned int Laser_Init2Laser(laser * ml, laser * sl);//init
 unsigned int Laser_Start2Laser(laser * ml, laser * sl);//recv start , wait until ready, GetPosOffset
 //FONCTION EXIT LASER
-unsigned int Laser_Exit2Laser(laser * ml, laser * sl);//recv stop et close en 1
+//utiliser Laser_Exit1Laser 2 fois.
 
-//****************FONCTION RECUP DONNEES***************************************************//
+/****************FONCTION RECUP DONNEES***************************************************/
 
 //return laser_status
 //temps d'exec <50us, sort la derniere mesure et la valide
 //retourne état laser (voir define plus haut)
 unsigned int Laser_GetData(laser * master, laser * slave, struct laser_data * d);
-//retourne 0 si ok 1 si l1 pas près 2 si l2 pas près
-unsigned int Laser_GetUnverifiedData(laser * l1, laser * l2, unsigned long * mesl1, unsigned long * mesl2);
+
 
 //temps d'exec >1s precision abs 30dmm/s à vitesse constante
 unsigned int Laser_GetVitesse(laser * master, laser * slave, struct laser_data * d);
 
 
-
+/**Laser Simulation**/
+void Laser_Init_Simu(laser * l);
+unsigned long GetDate_us(void);

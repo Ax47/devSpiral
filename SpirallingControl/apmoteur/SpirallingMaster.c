@@ -18,6 +18,24 @@ UNS16 Voltage_Vaux = 0x0;		/* Mapped at index 0x2008, subindex 0x00 */
 UNS16 ErrorCode_Vaux = 0x0;		/* Mapped at index 0x2009, subindex 0x00 */
 INTEGER32 Velocity_Vaux = 0x0;		/* Mapped at index 0x200A, subindex 0x00 */
 INTEGER32 Vel2Send_Vaux = 0x0;		/* Mapped at index 0x200B, subindex 0x00 */
+UNS16 StatusWord_MotRot = 0x0;		/* Mapped at index 0x200C, subindex 0x00 */
+INTEGER8 InternalTemp_MotRot = 0x0;		/* Mapped at index 0x200D, subindex 0x00 */
+UNS16 Voltage_MotRot = 0x0;		/* Mapped at index 0x200E, subindex 0x00 */
+UNS16 ErrorCode_MotRot = 0x0;		/* Mapped at index 0x200F, subindex 0x00 */
+INTEGER32 ConsigneVitesse_MotRot = 0x0;		/* Mapped at index 0x2010, subindex 0x00 */
+INTEGER32 CaptureVitesse_MotRot = 0x0;		/* Mapped at index 0x2011, subindex 0x00 */
+INTEGER32 CapturePosition_MotRot = 0x0;		/* Mapped at index 0x2012, subindex 0x00 */
+UNS16 StatusWord_MotRotAux = 0x0;		/* Mapped at index 0x2013, subindex 0x00 */
+INTEGER8 InternalTemp_MotRotAux = 0x0;		/* Mapped at index 0x2014, subindex 0x00 */
+UNS16 Voltage_MotRotAux = 0x0;		/* Mapped at index 0x2015, subindex 0x00 */
+UNS16 ErrorCode_MotRotAux = 0x0;		/* Mapped at index 0x2016, subindex 0x00 */
+INTEGER32 ConsigneVitesse_MotRotAux = 0x0;		/* Mapped at index 0x2017, subindex 0x00 */
+INTEGER32 CaptureVitesse_MotRotAux = 0x0;		/* Mapped at index 0x2018, subindex 0x00 */
+UNS32 ConsigneAcceleration_MotRot = 0x0;		/* Mapped at index 0x2019, subindex 0x00 */
+UNS16 ControlWord_MotRot = 0x0;		/* Mapped at index 0x201A, subindex 0x00 */
+UNS32 ConsigneDeceleration_MotRot = 0x0;		/* Mapped at index 0x201B, subindex 0x00 */
+UNS32 Acceleration_V = 0x0;		/* Mapped at index 0x201C, subindex 0x00 */
+UNS32 Deceleration_V = 0x0;		/* Mapped at index 0x201D, subindex 0x00 */
 
 /**************************************************************************/
 /* Declaration of value range types                                       */
@@ -45,7 +63,7 @@ UNS8 SpirallingMaster_bDeviceNodeId = 0x00;
 
 const UNS8 SpirallingMaster_iam_a_slave = 0;
 
-TIMER_HANDLE SpirallingMaster_heartBeatTimers[2] = {TIMER_NONE,TIMER_NONE};
+TIMER_HANDLE SpirallingMaster_heartBeatTimers[3] = {TIMER_NONE,TIMER_NONE,TIMER_NONE};
 
 /*
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -122,9 +140,10 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                      };
 
 /* index 0x1016 :   Consumer Heartbeat Time. */
-                    UNS8 SpirallingMaster_highestSubIndex_obj1016 = 2; /* number of subindex - 1*/
+                    UNS8 SpirallingMaster_highestSubIndex_obj1016 = 3; /* number of subindex - 1*/
                     UNS32 SpirallingMaster_obj1016[] =
                     {
+                      0x64,	/* 100 */
                       0x64,	/* 100 */
                       0x64	/* 100 */
                     };
@@ -132,7 +151,8 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                      {
                        { RO, uint8, sizeof (UNS8), (void*)&SpirallingMaster_highestSubIndex_obj1016 },
                        { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1016[0] },
-                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1016[1] }
+                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1016[1] },
+                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1016[2] }
                      };
 
 /* index 0x1017 :   Producer Heartbeat Time */
@@ -177,6 +197,19 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                        { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1281_COB_ID_Client_to_Server_Transmit_SDO },
                        { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1281_COB_ID_Server_to_Client_Receive_SDO },
                        { RW, uint8, sizeof (UNS8), (void*)&SpirallingMaster_obj1281_Node_ID_of_the_SDO_Server }
+                     };
+
+/* index 0x1282 :   Client SDO 3 Parameter. */
+                    UNS8 SpirallingMaster_highestSubIndex_obj1282 = 3; /* number of subindex - 1*/
+                    UNS32 SpirallingMaster_obj1282_COB_ID_Client_to_Server_Transmit_SDO = 0x604;	/* 1540 */
+                    UNS32 SpirallingMaster_obj1282_COB_ID_Server_to_Client_Receive_SDO = 0x584;	/* 1412 */
+                    UNS8 SpirallingMaster_obj1282_Node_ID_of_the_SDO_Server = 0x4;	/* 4 */
+                    subindex SpirallingMaster_Index1282[] =
+                     {
+                       { RO, uint8, sizeof (UNS8), (void*)&SpirallingMaster_highestSubIndex_obj1282 },
+                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1282_COB_ID_Client_to_Server_Transmit_SDO },
+                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1282_COB_ID_Server_to_Client_Receive_SDO },
+                       { RW, uint8, sizeof (UNS8), (void*)&SpirallingMaster_obj1282_Node_ID_of_the_SDO_Server }
                      };
 
 /* index 0x1400 :   Receive PDO 1 Parameter. */
@@ -293,6 +326,63 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                        { RW, uint8, sizeof (UNS8), (void*)&SpirallingMaster_obj1405_SYNC_start_value }
                      };
 
+/* index 0x1406 :   Receive PDO 7 Parameter. */
+                    UNS8 SpirallingMaster_highestSubIndex_obj1406 = 6; /* number of subindex - 1*/
+                    UNS32 SpirallingMaster_obj1406_COB_ID_used_by_PDO = 0x0;	/* 0 */
+                    UNS8 SpirallingMaster_obj1406_Transmission_Type = 0x0;	/* 0 */
+                    UNS16 SpirallingMaster_obj1406_Inhibit_Time = 0x0;	/* 0 */
+                    UNS8 SpirallingMaster_obj1406_Compatibility_Entry = 0x0;	/* 0 */
+                    UNS16 SpirallingMaster_obj1406_Event_Timer = 0x0;	/* 0 */
+                    UNS8 SpirallingMaster_obj1406_SYNC_start_value = 0x0;	/* 0 */
+                    subindex SpirallingMaster_Index1406[] =
+                     {
+                       { RO, uint8, sizeof (UNS8), (void*)&SpirallingMaster_highestSubIndex_obj1406 },
+                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1406_COB_ID_used_by_PDO },
+                       { RW, uint8, sizeof (UNS8), (void*)&SpirallingMaster_obj1406_Transmission_Type },
+                       { RW, uint16, sizeof (UNS16), (void*)&SpirallingMaster_obj1406_Inhibit_Time },
+                       { RW, uint8, sizeof (UNS8), (void*)&SpirallingMaster_obj1406_Compatibility_Entry },
+                       { RW, uint16, sizeof (UNS16), (void*)&SpirallingMaster_obj1406_Event_Timer },
+                       { RW, uint8, sizeof (UNS8), (void*)&SpirallingMaster_obj1406_SYNC_start_value }
+                     };
+
+/* index 0x1407 :   Receive PDO 8 Parameter. */
+                    UNS8 SpirallingMaster_highestSubIndex_obj1407 = 6; /* number of subindex - 1*/
+                    UNS32 SpirallingMaster_obj1407_COB_ID_used_by_PDO = 0x0;	/* 0 */
+                    UNS8 SpirallingMaster_obj1407_Transmission_Type = 0x0;	/* 0 */
+                    UNS16 SpirallingMaster_obj1407_Inhibit_Time = 0x0;	/* 0 */
+                    UNS8 SpirallingMaster_obj1407_Compatibility_Entry = 0x0;	/* 0 */
+                    UNS16 SpirallingMaster_obj1407_Event_Timer = 0x0;	/* 0 */
+                    UNS8 SpirallingMaster_obj1407_SYNC_start_value = 0x0;	/* 0 */
+                    subindex SpirallingMaster_Index1407[] =
+                     {
+                       { RO, uint8, sizeof (UNS8), (void*)&SpirallingMaster_highestSubIndex_obj1407 },
+                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1407_COB_ID_used_by_PDO },
+                       { RW, uint8, sizeof (UNS8), (void*)&SpirallingMaster_obj1407_Transmission_Type },
+                       { RW, uint16, sizeof (UNS16), (void*)&SpirallingMaster_obj1407_Inhibit_Time },
+                       { RW, uint8, sizeof (UNS8), (void*)&SpirallingMaster_obj1407_Compatibility_Entry },
+                       { RW, uint16, sizeof (UNS16), (void*)&SpirallingMaster_obj1407_Event_Timer },
+                       { RW, uint8, sizeof (UNS8), (void*)&SpirallingMaster_obj1407_SYNC_start_value }
+                     };
+
+/* index 0x1408 :   Receive PDO 9 Parameter. */
+                    UNS8 SpirallingMaster_highestSubIndex_obj1408 = 6; /* number of subindex - 1*/
+                    UNS32 SpirallingMaster_obj1408_COB_ID_used_by_PDO = 0x0;	/* 0 */
+                    UNS8 SpirallingMaster_obj1408_Transmission_Type = 0x0;	/* 0 */
+                    UNS16 SpirallingMaster_obj1408_Inhibit_Time = 0x0;	/* 0 */
+                    UNS8 SpirallingMaster_obj1408_Compatibility_Entry = 0x0;	/* 0 */
+                    UNS16 SpirallingMaster_obj1408_Event_Timer = 0x0;	/* 0 */
+                    UNS8 SpirallingMaster_obj1408_SYNC_start_value = 0x0;	/* 0 */
+                    subindex SpirallingMaster_Index1408[] =
+                     {
+                       { RO, uint8, sizeof (UNS8), (void*)&SpirallingMaster_highestSubIndex_obj1408 },
+                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1408_COB_ID_used_by_PDO },
+                       { RW, uint8, sizeof (UNS8), (void*)&SpirallingMaster_obj1408_Transmission_Type },
+                       { RW, uint16, sizeof (UNS16), (void*)&SpirallingMaster_obj1408_Inhibit_Time },
+                       { RW, uint8, sizeof (UNS8), (void*)&SpirallingMaster_obj1408_Compatibility_Entry },
+                       { RW, uint16, sizeof (UNS16), (void*)&SpirallingMaster_obj1408_Event_Timer },
+                       { RW, uint8, sizeof (UNS8), (void*)&SpirallingMaster_obj1408_SYNC_start_value }
+                     };
+
 /* index 0x1600 :   Receive PDO 1 Mapping. */
                     UNS8 SpirallingMaster_highestSubIndex_obj1600 = 2; /* number of subindex - 1*/
                     UNS32 SpirallingMaster_obj1600[] =
@@ -371,6 +461,48 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                      {
                        { RW, uint8, sizeof (UNS8), (void*)&SpirallingMaster_highestSubIndex_obj1605 },
                        { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1605[0] }
+                     };
+
+/* index 0x1606 :   Receive PDO 7 Mapping. */
+                    UNS8 SpirallingMaster_highestSubIndex_obj1606 = 2; /* number of subindex - 1*/
+                    UNS32 SpirallingMaster_obj1606[] =
+                    {
+                      0x200C0010,	/* 537657360 */
+                      0x200F0010	/* 537853968 */
+                    };
+                    subindex SpirallingMaster_Index1606[] =
+                     {
+                       { RW, uint8, sizeof (UNS8), (void*)&SpirallingMaster_highestSubIndex_obj1606 },
+                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1606[0] },
+                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1606[1] }
+                     };
+
+/* index 0x1607 :   Receive PDO 8 Mapping. */
+                    UNS8 SpirallingMaster_highestSubIndex_obj1607 = 2; /* number of subindex - 1*/
+                    UNS32 SpirallingMaster_obj1607[] =
+                    {
+                      0x200E0010,	/* 537788432 */
+                      0x200D0008	/* 537722888 */
+                    };
+                    subindex SpirallingMaster_Index1607[] =
+                     {
+                       { RW, uint8, sizeof (UNS8), (void*)&SpirallingMaster_highestSubIndex_obj1607 },
+                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1607[0] },
+                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1607[1] }
+                     };
+
+/* index 0x1608 :   Receive PDO 9 Mapping. */
+                    UNS8 SpirallingMaster_highestSubIndex_obj1608 = 2; /* number of subindex - 1*/
+                    UNS32 SpirallingMaster_obj1608[] =
+                    {
+                      0x20110020,	/* 537985056 */
+                      0x20120020	/* 538050592 */
+                    };
+                    subindex SpirallingMaster_Index1608[] =
+                     {
+                       { RW, uint8, sizeof (UNS8), (void*)&SpirallingMaster_highestSubIndex_obj1608 },
+                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1608[0] },
+                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1608[1] }
                      };
 
 /* index 0x1800 :   Transmit PDO 1 Parameter. */
@@ -514,55 +646,27 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                      };
 
 /* index 0x1A02 :   Transmit PDO 3 Mapping. */
-                    UNS8 SpirallingMaster_highestSubIndex_obj1A02 = 8; /* number of subindex - 1*/
+                    UNS8 SpirallingMaster_highestSubIndex_obj1A02 = 1; /* number of subindex - 1*/
                     UNS32 SpirallingMaster_obj1A02[] =
                     {
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0	/* 0 */
+                      0x20100020	/* 537919520 */
                     };
                     subindex SpirallingMaster_Index1A02[] =
                      {
                        { RW, uint8, sizeof (UNS8), (void*)&SpirallingMaster_highestSubIndex_obj1A02 },
-                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1A02[0] },
-                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1A02[1] },
-                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1A02[2] },
-                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1A02[3] },
-                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1A02[4] },
-                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1A02[5] },
-                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1A02[6] },
-                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1A02[7] }
+                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1A02[0] }
                      };
 
 /* index 0x1A03 :   Transmit PDO 4 Mapping. */
-                    UNS8 SpirallingMaster_highestSubIndex_obj1A03 = 8; /* number of subindex - 1*/
+                    UNS8 SpirallingMaster_highestSubIndex_obj1A03 = 1; /* number of subindex - 1*/
                     UNS32 SpirallingMaster_obj1A03[] =
                     {
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0	/* 0 */
+                      0x20170020	/* 538378272 */
                     };
                     subindex SpirallingMaster_Index1A03[] =
                      {
                        { RW, uint8, sizeof (UNS8), (void*)&SpirallingMaster_highestSubIndex_obj1A03 },
-                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1A03[0] },
-                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1A03[1] },
-                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1A03[2] },
-                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1A03[3] },
-                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1A03[4] },
-                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1A03[5] },
-                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1A03[6] },
-                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1A03[7] }
+                       { RW, uint32, sizeof (UNS32), (void*)&SpirallingMaster_obj1A03[0] }
                      };
 
 /* index 0x1F22 :   Concise DCF. */
@@ -657,6 +761,182 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                        { RW, int32, sizeof (INTEGER32), (void*)&Vel2Send_Vaux }
                      };
 
+/* index 0x200C :   Mapped variable StatusWord_MotRot */
+                    ODCallback_t StatusWord_MotRot_callbacks[] =
+                     {
+                       NULL,
+                     };
+                    subindex SpirallingMaster_Index200C[] =
+                     {
+                       { RW, uint16, sizeof (UNS16), (void*)&StatusWord_MotRot }
+                     };
+
+/* index 0x200D :   Mapped variable InternalTemp_MotRot */
+                    ODCallback_t InternalTemp_MotRot_callbacks[] =
+                     {
+                       NULL,
+                     };
+                    subindex SpirallingMaster_Index200D[] =
+                     {
+                       { RW, int8, sizeof (INTEGER8), (void*)&InternalTemp_MotRot }
+                     };
+
+/* index 0x200E :   Mapped variable Voltage_MotRot */
+                    ODCallback_t Voltage_MotRot_callbacks[] =
+                     {
+                       NULL,
+                     };
+                    subindex SpirallingMaster_Index200E[] =
+                     {
+                       { RW, uint16, sizeof (UNS16), (void*)&Voltage_MotRot }
+                     };
+
+/* index 0x200F :   Mapped variable ErrorCode_MotRot */
+                    ODCallback_t ErrorCode_MotRot_callbacks[] =
+                     {
+                       NULL,
+                     };
+                    subindex SpirallingMaster_Index200F[] =
+                     {
+                       { RW, uint16, sizeof (UNS16), (void*)&ErrorCode_MotRot }
+                     };
+
+/* index 0x2010 :   Mapped variable ConsigneVitesse_MotRot */
+                    ODCallback_t ConsigneVitesse_MotRot_callbacks[] =
+                     {
+                       NULL,
+                     };
+                    subindex SpirallingMaster_Index2010[] =
+                     {
+                       { RW, int32, sizeof (INTEGER32), (void*)&ConsigneVitesse_MotRot }
+                     };
+
+/* index 0x2011 :   Mapped variable CaptureVitesse_MotRot */
+                    ODCallback_t CaptureVitesse_MotRot_callbacks[] =
+                     {
+                       NULL,
+                     };
+                    subindex SpirallingMaster_Index2011[] =
+                     {
+                       { RW, int32, sizeof (INTEGER32), (void*)&CaptureVitesse_MotRot }
+                     };
+
+/* index 0x2012 :   Mapped variable CapturePosition_MotRot */
+                    ODCallback_t CapturePosition_MotRot_callbacks[] =
+                     {
+                       NULL,
+                     };
+                    subindex SpirallingMaster_Index2012[] =
+                     {
+                       { RW, int32, sizeof (INTEGER32), (void*)&CapturePosition_MotRot }
+                     };
+
+/* index 0x2013 :   Mapped variable StatusWord_MotRotAux */
+                    ODCallback_t StatusWord_MotRotAux_callbacks[] =
+                     {
+                       NULL,
+                     };
+                    subindex SpirallingMaster_Index2013[] =
+                     {
+                       { RW, uint16, sizeof (UNS16), (void*)&StatusWord_MotRotAux }
+                     };
+
+/* index 0x2014 :   Mapped variable InternalTemp_MotRotAux */
+                    ODCallback_t InternalTemp_MotRotAux_callbacks[] =
+                     {
+                       NULL,
+                     };
+                    subindex SpirallingMaster_Index2014[] =
+                     {
+                       { RW, int8, sizeof (INTEGER8), (void*)&InternalTemp_MotRotAux }
+                     };
+
+/* index 0x2015 :   Mapped variable Voltage_MotRotAux */
+                    ODCallback_t Voltage_MotRotAux_callbacks[] =
+                     {
+                       NULL,
+                     };
+                    subindex SpirallingMaster_Index2015[] =
+                     {
+                       { RW, uint16, sizeof (UNS16), (void*)&Voltage_MotRotAux }
+                     };
+
+/* index 0x2016 :   Mapped variable ErrorCode_MotRotAux */
+                    ODCallback_t ErrorCode_MotRotAux_callbacks[] =
+                     {
+                       NULL,
+                     };
+                    subindex SpirallingMaster_Index2016[] =
+                     {
+                       { RW, uint16, sizeof (UNS16), (void*)&ErrorCode_MotRotAux }
+                     };
+
+/* index 0x2017 :   Mapped variable ConsigneVitesse_MotRotAux */
+                    ODCallback_t ConsigneVitesse_MotRotAux_callbacks[] =
+                     {
+                       NULL,
+                     };
+                    subindex SpirallingMaster_Index2017[] =
+                     {
+                       { RW, int32, sizeof (INTEGER32), (void*)&ConsigneVitesse_MotRotAux }
+                     };
+
+/* index 0x2018 :   Mapped variable CaptureVitesse_MotRotAux */
+                    ODCallback_t CaptureVitesse_MotRotAux_callbacks[] =
+                     {
+                       NULL,
+                     };
+                    subindex SpirallingMaster_Index2018[] =
+                     {
+                       { RW, int32, sizeof (INTEGER32), (void*)&CaptureVitesse_MotRotAux }
+                     };
+
+/* index 0x2019 :   Mapped variable ConsigneAcceleration_MotRot */
+                    ODCallback_t ConsigneAcceleration_MotRot_callbacks[] =
+                     {
+                       NULL,
+                     };
+                    subindex SpirallingMaster_Index2019[] =
+                     {
+                       { RW, uint32, sizeof (UNS32), (void*)&ConsigneAcceleration_MotRot }
+                     };
+
+/* index 0x201A :   Mapped variable ControlWord_MotRot */
+                    ODCallback_t ControlWord_MotRot_callbacks[] =
+                     {
+                       NULL,
+                     };
+                    subindex SpirallingMaster_Index201A[] =
+                     {
+                       { RW, uint16, sizeof (UNS16), (void*)&ControlWord_MotRot }
+                     };
+
+/* index 0x201B :   Mapped variable ConsigneDeceleration_MotRot */
+                    ODCallback_t ConsigneDeceleration_MotRot_callbacks[] =
+                     {
+                       NULL,
+                     };
+                    subindex SpirallingMaster_Index201B[] =
+                     {
+                       { RW, uint32, sizeof (UNS32), (void*)&ConsigneDeceleration_MotRot }
+                     };
+
+/* index 0x201C :   Mapped variable Acceleration_V */
+                    ODCallback_t Acceleration_V_callbacks[] =
+                     {
+                       NULL,
+                     };
+                    subindex SpirallingMaster_Index201C[] =
+                     {
+                       { RW, uint32, sizeof (UNS32), (void*)&Acceleration_V }
+                     };
+
+/* index 0x201D :   Mapped variable Deceleration_V */
+                    subindex SpirallingMaster_Index201D[] =
+                     {
+                       { RW, uint32, sizeof (UNS32), (void*)&Deceleration_V }
+                     };
+
 /**************************************************************************/
 /* Declaration of pointed variables                                       */
 /**************************************************************************/
@@ -672,18 +952,25 @@ const indextable SpirallingMaster_objdict[] =
   { (subindex*)SpirallingMaster_Index1018,sizeof(SpirallingMaster_Index1018)/sizeof(SpirallingMaster_Index1018[0]), 0x1018},
   { (subindex*)SpirallingMaster_Index1280,sizeof(SpirallingMaster_Index1280)/sizeof(SpirallingMaster_Index1280[0]), 0x1280},
   { (subindex*)SpirallingMaster_Index1281,sizeof(SpirallingMaster_Index1281)/sizeof(SpirallingMaster_Index1281[0]), 0x1281},
+  { (subindex*)SpirallingMaster_Index1282,sizeof(SpirallingMaster_Index1282)/sizeof(SpirallingMaster_Index1282[0]), 0x1282},
   { (subindex*)SpirallingMaster_Index1400,sizeof(SpirallingMaster_Index1400)/sizeof(SpirallingMaster_Index1400[0]), 0x1400},
   { (subindex*)SpirallingMaster_Index1401,sizeof(SpirallingMaster_Index1401)/sizeof(SpirallingMaster_Index1401[0]), 0x1401},
   { (subindex*)SpirallingMaster_Index1402,sizeof(SpirallingMaster_Index1402)/sizeof(SpirallingMaster_Index1402[0]), 0x1402},
   { (subindex*)SpirallingMaster_Index1403,sizeof(SpirallingMaster_Index1403)/sizeof(SpirallingMaster_Index1403[0]), 0x1403},
   { (subindex*)SpirallingMaster_Index1404,sizeof(SpirallingMaster_Index1404)/sizeof(SpirallingMaster_Index1404[0]), 0x1404},
   { (subindex*)SpirallingMaster_Index1405,sizeof(SpirallingMaster_Index1405)/sizeof(SpirallingMaster_Index1405[0]), 0x1405},
+  { (subindex*)SpirallingMaster_Index1406,sizeof(SpirallingMaster_Index1406)/sizeof(SpirallingMaster_Index1406[0]), 0x1406},
+  { (subindex*)SpirallingMaster_Index1407,sizeof(SpirallingMaster_Index1407)/sizeof(SpirallingMaster_Index1407[0]), 0x1407},
+  { (subindex*)SpirallingMaster_Index1408,sizeof(SpirallingMaster_Index1408)/sizeof(SpirallingMaster_Index1408[0]), 0x1408},
   { (subindex*)SpirallingMaster_Index1600,sizeof(SpirallingMaster_Index1600)/sizeof(SpirallingMaster_Index1600[0]), 0x1600},
   { (subindex*)SpirallingMaster_Index1601,sizeof(SpirallingMaster_Index1601)/sizeof(SpirallingMaster_Index1601[0]), 0x1601},
   { (subindex*)SpirallingMaster_Index1602,sizeof(SpirallingMaster_Index1602)/sizeof(SpirallingMaster_Index1602[0]), 0x1602},
   { (subindex*)SpirallingMaster_Index1603,sizeof(SpirallingMaster_Index1603)/sizeof(SpirallingMaster_Index1603[0]), 0x1603},
   { (subindex*)SpirallingMaster_Index1604,sizeof(SpirallingMaster_Index1604)/sizeof(SpirallingMaster_Index1604[0]), 0x1604},
   { (subindex*)SpirallingMaster_Index1605,sizeof(SpirallingMaster_Index1605)/sizeof(SpirallingMaster_Index1605[0]), 0x1605},
+  { (subindex*)SpirallingMaster_Index1606,sizeof(SpirallingMaster_Index1606)/sizeof(SpirallingMaster_Index1606[0]), 0x1606},
+  { (subindex*)SpirallingMaster_Index1607,sizeof(SpirallingMaster_Index1607)/sizeof(SpirallingMaster_Index1607[0]), 0x1607},
+  { (subindex*)SpirallingMaster_Index1608,sizeof(SpirallingMaster_Index1608)/sizeof(SpirallingMaster_Index1608[0]), 0x1608},
   { (subindex*)SpirallingMaster_Index1800,sizeof(SpirallingMaster_Index1800)/sizeof(SpirallingMaster_Index1800[0]), 0x1800},
   { (subindex*)SpirallingMaster_Index1801,sizeof(SpirallingMaster_Index1801)/sizeof(SpirallingMaster_Index1801[0]), 0x1801},
   { (subindex*)SpirallingMaster_Index1802,sizeof(SpirallingMaster_Index1802)/sizeof(SpirallingMaster_Index1802[0]), 0x1802},
@@ -705,6 +992,24 @@ const indextable SpirallingMaster_objdict[] =
   { (subindex*)SpirallingMaster_Index2009,sizeof(SpirallingMaster_Index2009)/sizeof(SpirallingMaster_Index2009[0]), 0x2009},
   { (subindex*)SpirallingMaster_Index200A,sizeof(SpirallingMaster_Index200A)/sizeof(SpirallingMaster_Index200A[0]), 0x200A},
   { (subindex*)SpirallingMaster_Index200B,sizeof(SpirallingMaster_Index200B)/sizeof(SpirallingMaster_Index200B[0]), 0x200B},
+  { (subindex*)SpirallingMaster_Index200C,sizeof(SpirallingMaster_Index200C)/sizeof(SpirallingMaster_Index200C[0]), 0x200C},
+  { (subindex*)SpirallingMaster_Index200D,sizeof(SpirallingMaster_Index200D)/sizeof(SpirallingMaster_Index200D[0]), 0x200D},
+  { (subindex*)SpirallingMaster_Index200E,sizeof(SpirallingMaster_Index200E)/sizeof(SpirallingMaster_Index200E[0]), 0x200E},
+  { (subindex*)SpirallingMaster_Index200F,sizeof(SpirallingMaster_Index200F)/sizeof(SpirallingMaster_Index200F[0]), 0x200F},
+  { (subindex*)SpirallingMaster_Index2010,sizeof(SpirallingMaster_Index2010)/sizeof(SpirallingMaster_Index2010[0]), 0x2010},
+  { (subindex*)SpirallingMaster_Index2011,sizeof(SpirallingMaster_Index2011)/sizeof(SpirallingMaster_Index2011[0]), 0x2011},
+  { (subindex*)SpirallingMaster_Index2012,sizeof(SpirallingMaster_Index2012)/sizeof(SpirallingMaster_Index2012[0]), 0x2012},
+  { (subindex*)SpirallingMaster_Index2013,sizeof(SpirallingMaster_Index2013)/sizeof(SpirallingMaster_Index2013[0]), 0x2013},
+  { (subindex*)SpirallingMaster_Index2014,sizeof(SpirallingMaster_Index2014)/sizeof(SpirallingMaster_Index2014[0]), 0x2014},
+  { (subindex*)SpirallingMaster_Index2015,sizeof(SpirallingMaster_Index2015)/sizeof(SpirallingMaster_Index2015[0]), 0x2015},
+  { (subindex*)SpirallingMaster_Index2016,sizeof(SpirallingMaster_Index2016)/sizeof(SpirallingMaster_Index2016[0]), 0x2016},
+  { (subindex*)SpirallingMaster_Index2017,sizeof(SpirallingMaster_Index2017)/sizeof(SpirallingMaster_Index2017[0]), 0x2017},
+  { (subindex*)SpirallingMaster_Index2018,sizeof(SpirallingMaster_Index2018)/sizeof(SpirallingMaster_Index2018[0]), 0x2018},
+  { (subindex*)SpirallingMaster_Index2019,sizeof(SpirallingMaster_Index2019)/sizeof(SpirallingMaster_Index2019[0]), 0x2019},
+  { (subindex*)SpirallingMaster_Index201A,sizeof(SpirallingMaster_Index201A)/sizeof(SpirallingMaster_Index201A[0]), 0x201A},
+  { (subindex*)SpirallingMaster_Index201B,sizeof(SpirallingMaster_Index201B)/sizeof(SpirallingMaster_Index201B[0]), 0x201B},
+  { (subindex*)SpirallingMaster_Index201C,sizeof(SpirallingMaster_Index201C)/sizeof(SpirallingMaster_Index201C[0]), 0x201C},
+  { (subindex*)SpirallingMaster_Index201D,sizeof(SpirallingMaster_Index201D)/sizeof(SpirallingMaster_Index201D[0]), 0x201D},
 };
 
 const indextable * SpirallingMaster_scanIndexOD (UNS16 wIndex, UNS32 * errorCode, ODCallback_t **callbacks)
@@ -721,39 +1026,64 @@ const indextable * SpirallingMaster_scanIndexOD (UNS16 wIndex, UNS32 * errorCode
 		case 0x1018: i = 6;break;
 		case 0x1280: i = 7;break;
 		case 0x1281: i = 8;break;
-		case 0x1400: i = 9;break;
-		case 0x1401: i = 10;break;
-		case 0x1402: i = 11;break;
-		case 0x1403: i = 12;break;
-		case 0x1404: i = 13;break;
-		case 0x1405: i = 14;break;
-		case 0x1600: i = 15;break;
-		case 0x1601: i = 16;break;
-		case 0x1602: i = 17;break;
-		case 0x1603: i = 18;break;
-		case 0x1604: i = 19;break;
-		case 0x1605: i = 20;break;
-		case 0x1800: i = 21;*callbacks = SpirallingMaster_Index1800_callbacks; break;
-		case 0x1801: i = 22;*callbacks = SpirallingMaster_Index1801_callbacks; break;
-		case 0x1802: i = 23;*callbacks = SpirallingMaster_Index1802_callbacks; break;
-		case 0x1803: i = 24;*callbacks = SpirallingMaster_Index1803_callbacks; break;
-		case 0x1A00: i = 25;break;
-		case 0x1A01: i = 26;break;
-		case 0x1A02: i = 27;break;
-		case 0x1A03: i = 28;break;
-		case 0x1F22: i = 29;break;
-		case 0x2000: i = 30;*callbacks = StatusWord_V_callbacks; break;
-		case 0x2001: i = 31;break;
-		case 0x2002: i = 32;break;
-		case 0x2003: i = 33;break;
-		case 0x2004: i = 34;*callbacks = StatusWord_Vaux_callbacks; break;
-		case 0x2005: i = 35;break;
-		case 0x2006: i = 36;break;
-		case 0x2007: i = 37;break;
-		case 0x2008: i = 38;break;
-		case 0x2009: i = 39;break;
-		case 0x200A: i = 40;break;
-		case 0x200B: i = 41;break;
+		case 0x1282: i = 9;break;
+		case 0x1400: i = 10;break;
+		case 0x1401: i = 11;break;
+		case 0x1402: i = 12;break;
+		case 0x1403: i = 13;break;
+		case 0x1404: i = 14;break;
+		case 0x1405: i = 15;break;
+		case 0x1406: i = 16;break;
+		case 0x1407: i = 17;break;
+		case 0x1408: i = 18;break;
+		case 0x1600: i = 19;break;
+		case 0x1601: i = 20;break;
+		case 0x1602: i = 21;break;
+		case 0x1603: i = 22;break;
+		case 0x1604: i = 23;break;
+		case 0x1605: i = 24;break;
+		case 0x1606: i = 25;break;
+		case 0x1607: i = 26;break;
+		case 0x1608: i = 27;break;
+		case 0x1800: i = 28;*callbacks = SpirallingMaster_Index1800_callbacks; break;
+		case 0x1801: i = 29;*callbacks = SpirallingMaster_Index1801_callbacks; break;
+		case 0x1802: i = 30;*callbacks = SpirallingMaster_Index1802_callbacks; break;
+		case 0x1803: i = 31;*callbacks = SpirallingMaster_Index1803_callbacks; break;
+		case 0x1A00: i = 32;break;
+		case 0x1A01: i = 33;break;
+		case 0x1A02: i = 34;break;
+		case 0x1A03: i = 35;break;
+		case 0x1F22: i = 36;break;
+		case 0x2000: i = 37;*callbacks = StatusWord_V_callbacks; break;
+		case 0x2001: i = 38;break;
+		case 0x2002: i = 39;break;
+		case 0x2003: i = 40;break;
+		case 0x2004: i = 41;*callbacks = StatusWord_Vaux_callbacks; break;
+		case 0x2005: i = 42;break;
+		case 0x2006: i = 43;break;
+		case 0x2007: i = 44;break;
+		case 0x2008: i = 45;break;
+		case 0x2009: i = 46;break;
+		case 0x200A: i = 47;break;
+		case 0x200B: i = 48;break;
+		case 0x200C: i = 49;*callbacks = StatusWord_MotRot_callbacks; break;
+		case 0x200D: i = 50;*callbacks = InternalTemp_MotRot_callbacks; break;
+		case 0x200E: i = 51;*callbacks = Voltage_MotRot_callbacks; break;
+		case 0x200F: i = 52;*callbacks = ErrorCode_MotRot_callbacks; break;
+		case 0x2010: i = 53;*callbacks = ConsigneVitesse_MotRot_callbacks; break;
+		case 0x2011: i = 54;*callbacks = CaptureVitesse_MotRot_callbacks; break;
+		case 0x2012: i = 55;*callbacks = CapturePosition_MotRot_callbacks; break;
+		case 0x2013: i = 56;*callbacks = StatusWord_MotRotAux_callbacks; break;
+		case 0x2014: i = 57;*callbacks = InternalTemp_MotRotAux_callbacks; break;
+		case 0x2015: i = 58;*callbacks = Voltage_MotRotAux_callbacks; break;
+		case 0x2016: i = 59;*callbacks = ErrorCode_MotRotAux_callbacks; break;
+		case 0x2017: i = 60;*callbacks = ConsigneVitesse_MotRotAux_callbacks; break;
+		case 0x2018: i = 61;*callbacks = CaptureVitesse_MotRotAux_callbacks; break;
+		case 0x2019: i = 62;*callbacks = ConsigneAcceleration_MotRot_callbacks; break;
+		case 0x201A: i = 63;*callbacks = ControlWord_MotRot_callbacks; break;
+		case 0x201B: i = 64;*callbacks = ConsigneDeceleration_MotRot_callbacks; break;
+		case 0x201C: i = 65;*callbacks = Acceleration_V_callbacks; break;
+		case 0x201D: i = 66;break;
 		default:
 			*errorCode = OD_NO_SUCH_OBJECT;
 			return NULL;
@@ -772,19 +1102,19 @@ s_PDO_status SpirallingMaster_PDO_status[4] = {s_PDO_status_Initializer,s_PDO_st
 const quick_index SpirallingMaster_firstIndex = {
   0, /* SDO_SVR */
   7, /* SDO_CLT */
-  9, /* PDO_RCV */
-  15, /* PDO_RCV_MAP */
-  21, /* PDO_TRS */
-  25 /* PDO_TRS_MAP */
+  10, /* PDO_RCV */
+  19, /* PDO_RCV_MAP */
+  28, /* PDO_TRS */
+  32 /* PDO_TRS_MAP */
 };
 
 const quick_index SpirallingMaster_lastIndex = {
   0, /* SDO_SVR */
-  8, /* SDO_CLT */
-  14, /* PDO_RCV */
-  20, /* PDO_RCV_MAP */
-  24, /* PDO_TRS */
-  28 /* PDO_TRS_MAP */
+  9, /* SDO_CLT */
+  18, /* PDO_RCV */
+  27, /* PDO_RCV_MAP */
+  31, /* PDO_TRS */
+  35 /* PDO_TRS_MAP */
 };
 
 const UNS16 SpirallingMaster_ObjdictSize = sizeof(SpirallingMaster_objdict)/sizeof(SpirallingMaster_objdict[0]);
